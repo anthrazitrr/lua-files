@@ -1,1 +1,1206 @@
-local a=require("oop_menu")if not MENU_LIB_ERROR_OUTDATED then return error("outdated library")elseif MENU_LIB_VER~=1 then return MENU_LIB_ERROR_OUTDATED()end;local b="PIZDA_NOGAM"local c={[0]='generic','head','chest','stomach','left arm','right arm','left leg','right leg','neck','generic','gear'}local d={}local e,f=render.get_screen_size()local g=render.create_font("verdana.ttf",11,render.font_flag_shadow)local h=render.create_font("verdanab.ttf",11,render.font_flag_shadow)local i=cvar.r_3dsky;local j=cvar.r_aspectratio;local k=cvar.mat_fullbright;local l=cvar.cl_csm_rot_override;local m=cvar.cl_csm_rot_x;local n=cvar.cl_csm_rot_y;local o=cvar.cl_csm_rot_z;local p=cvar.fog_override;local q=cvar.fog_color;local r=cvar.fog_maxdensity;local s=cvar.fog_start;local t=cvar.fog_end;local u="rage>anti-aim>angles"local v="rage>anti-aim>desync"local w={"standing","moving","in air","in air duck","ducking","slowwalking"}local x={"none","static","3-way","slow jitter"}local y={"none","static","3-way","slow jitter"}local z={"down","half down","zero","half up","up","jitter half up/half down","jitter up/down","custom"}local A={"180 jitter","spin"}local B={"none","peek desync","peek real"}local C={tabs=a.add_listbox("","lua>tab a",3,false,{"~ ragebot","~ visuals","~ misc"}),name=a.add_listbox("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n","lua>tab a",1,false,{"                 PIZDA_NOGAM","anti-aim builder is in rage>anti-aim"}),aa_cond=a.add_combo("[PIZDANOGAM] condition",u,w),legitaa=a.add_checkbox("legit aa",u),st_yaw_add=a.add_combo("yaw add ",u,x),mv_yaw_add=a.add_combo("yaw add  ",u,x),ai_yaw_add=a.add_combo("yaw add   ",u,x),ad_yaw_add=a.add_combo("yaw add    ",u,x),dc_yaw_add=a.add_combo("yaw add     ",u,x),sw_yaw_add=a.add_combo("yaw add      ",u,x),st_add=a.add_slider("add ",u,-180,180,1),mv_add=a.add_slider("add  ",u,-180,180,1),ai_add=a.add_slider("add   ",u,-180,180,1),ad_add=a.add_slider("add    ",u,-180,180,1),dc_add=a.add_slider("add     ",u,-180,180,1),sw_add=a.add_slider("add      ",u,-180,180,1),st_at_target=a.add_checkbox("yaw at target",u),mv_at_target=a.add_checkbox("yaw at target ",u),ai_at_target=a.add_checkbox("yaw at target  ",u),ad_at_target=a.add_checkbox("yaw at target   ",u),dc_at_target=a.add_checkbox("yaw at target    ",u),sw_at_target=a.add_checkbox("yaw at target     ",u),st_spin=a.add_checkbox("spin ",u),mv_spin=a.add_checkbox("spin  ",u),ai_spin=a.add_checkbox("spin   ",u),ad_spin=a.add_checkbox("spin    ",u),dc_spin=a.add_checkbox("spin     ",u),sw_spin=a.add_checkbox("spin      ",u),st_spin_range=a.add_slider("spin range ",u,0,180,1),mv_spin_range=a.add_slider("spin range  ",u,0,180,1),ai_spin_range=a.add_slider("spin range   ",u,0,180,1),ad_spin_range=a.add_slider("spin range    ",u,0,180,1),dc_spin_range=a.add_slider("spin range     ",u,0,180,1),sw_spin_range=a.add_slider("spin range      ",u,0,180,1),st_spin_speed=a.add_slider("spin speed ",u,0,180,1),mv_spin_speed=a.add_slider("spin speed  ",u,0,180,1),ai_spin_speed=a.add_slider("spin speed   ",u,0,180,1),ad_spin_speed=a.add_slider("spin speed    ",u,0,180,1),dc_spin_speed=a.add_slider("spin speed     ",u,0,180,1),sw_spin_speed=a.add_slider("spin speed      ",u,0,180,1),st_jit=a.add_checkbox("jitter ",u),mv_jit=a.add_checkbox("jitter  ",u),ai_jit=a.add_checkbox("jitter   ",u),ad_jit=a.add_checkbox("jitter    ",u),dc_jit=a.add_checkbox("jitter     ",u),sw_jit=a.add_checkbox("jitter      ",u),st_jit_range=a.add_slider("jitter range ",u,0,180,1),mv_jit_range=a.add_slider("jitter range  ",u,0,180,1),ai_jit_range=a.add_slider("jitter range   ",u,0,180,1),ad_jit_range=a.add_slider("jitter range    ",u,0,180,1),dc_jit_range=a.add_slider("jitter range     ",u,0,180,1),sw_jit_range=a.add_slider("jitter range      ",u,0,180,1),st_jit_rnd=a.add_checkbox("random ",u),mv_jit_rnd=a.add_checkbox("random  ",u),ai_jit_rnd=a.add_checkbox("random   ",u),ad_jit_rnd=a.add_checkbox("random    ",u),dc_jit_rnd=a.add_checkbox("random     ",u),sw_jit_rnd=a.add_checkbox("random      ",u),defensive_aa=a.add_checkbox("defensive aa",u),def_pitch=a.add_combo("pitch type",u,z),def_custom_pitch=a.add_slider("custom pitch",u,-89,89,1),def_type=a.add_combo("yaw type",u,A),def_delay=a.add_slider("ticks to flick",u,1,16,1),jit_dis=a.add_multi_combo("jitter disablers",u,{"on freestand","on manual aa"}),aa_manual=a.add_checkbox("anti-aim override",u),left=a.add_checkbox("left ",u),back=a.add_checkbox("back ",u),right=a.add_checkbox("right ",u),fs=a.add_checkbox("freestand ",u),st_dsy=a.add_combo("desync ",v,y),mv_dsy=a.add_combo("desync  ",v,y),ai_dsy=a.add_combo("desync   ",v,y),ad_dsy=a.add_combo("desync    ",v,y),dc_dsy=a.add_combo("desync     ",v,y),sw_dsy=a.add_combo("desync      ",v,y),st_dsy_amt=a.add_slider("desync amount ",v,-100,100,1),mv_dsy_amt=a.add_slider("desync amount  ",v,-100,100,1),ai_dsy_amt=a.add_slider("desync amount   ",v,-100,100,1),ad_dsy_amt=a.add_slider("desync amount    ",v,-100,100,1),dc_dsy_amt=a.add_slider("desync amount     ",v,-100,100,1),sw_dsy_amt=a.add_slider("desync amount      ",v,-100,100,1),st_dsy_fs=a.add_combo("freestand desync",v,B),mv_dsy_fs=a.add_combo("freestand desync ",v,B),ai_dsy_fs=a.add_combo("freestand desync  ",v,B),ad_dsy_fs=a.add_combo("freestand desync   ",v,B),dc_dsy_fs=a.add_combo("freestand desync    ",v,B),sw_dsy_fs=a.add_combo("freestand desync     ",v,B),st_dsy_jit=a.add_checkbox("switch desync with jitter ",v),mv_dsy_jit=a.add_checkbox("switch desync with jitter  ",v),ai_dsy_jit=a.add_checkbox("switch desync with jitter   ",v),ad_dsy_jit=a.add_checkbox("switch desync with jitter    ",v),dc_dsy_jit=a.add_checkbox("switch desync with jitter     ",v),sw_dsy_jit=a.add_checkbox("switch desync with jitter      ",v),da_ovr=a.add_checkbox("dormant aimbot override","lua>tab b"),fl_ovr=a.add_multi_combo("disable fakelag on","lua>tab b",{"double tap","hide shots"}),inds=a.add_multi_combo("windows","lua>tab b",{"inds under crosshair","logs under crosshair","manual aa indication"}),ind_first=a.add_colorpicker("lua>tab b>windows",true,render.color(200,220,255,255)),ind_second=a.add_colorpicker("lua>tab b>windows",true,render.color(160,200,230,160)),log_offset=a.add_slider("logs y","lua>tab b",0,f/2-160,1),removals=a.add_multi_combo("visual removals","lua>tab b",{"3d skybox","lighting"}),sunset=a.add_checkbox("sunset","lua>tab b"),sunset_x=a.add_slider("direction x","lua>tab b",-100,100,1),sunset_y=a.add_slider("direction y","lua>tab b",-100,100,1),sunset_z=a.add_slider("direction z","lua>tab b",-100,100,1),fog=a.add_checkbox("world fog","lua>tab b"),fog_col=a.add_colorpicker("lua>tab b>world fog",false,render.color(255,255,255,100)),fog_start=a.add_slider("start","lua>tab b",0,2500,1),fog_end=a.add_slider("end","lua>tab b",0,2500,1),fog_strength=a.add_slider("density","lua>tab b",0,100,1),ratio=a.add_slider("aspect ratio","lua>tab b",0,200,1),animchangers=a.add_checkbox("animation modifiers","lua>tab b"),leg_movement=a.add_combo("leg movement type","lua>tab b",{"default","jitter","random","moonwalk","no animation"}),falling_anim=a.add_combo("falling animation style","lua>tab b",{"default","static"}),lean=a.add_combo("lean yaw style","lua>tab b",{"default","random"})}local D=a.get_reference("rage>aimbot>aimbot>double tap")local E=a.get_reference("rage>aimbot>aimbot>hide shot")local F=a.get_reference("rage>anti-aim>angles>freestand")local G=a.get_reference("rage>aimbot>ssg08>scout>override")local H=a.get_reference("rage>aimbot>aimbot>force extra safety")local I=a.get_reference("misc>movement>slide")local J=a.get_reference("rage>anti-aim>angles>left")local K=a.get_reference("rage>anti-aim>angles>back")local L=a.get_reference("rage>anti-aim>angles>right")local M=a.get_reference("rage>aimbot>aimbot>target dormant")local N=a.get_reference("rage>anti-aim>angles>anti-aim")local O=a.get_reference("rage>anti-aim>angles>pitch")local P=a.get_reference("rage>anti-aim>angles>yaw")local Q=a.get_reference("rage>anti-aim>angles>at fov target")local R=a.get_reference("rage>anti-aim>angles>yaw add")local S=a.get_reference("rage>anti-aim>angles>add")local T=a.get_reference("rage>anti-aim>angles>spin")local U=a.get_reference("rage>anti-aim>angles>spin range")local V=a.get_reference("rage>anti-aim>angles>spin speed")local W=a.get_reference("rage>anti-aim>angles>jitter")local X=a.get_reference("rage>anti-aim>angles>jitter range")local Y=a.get_reference("rage>anti-aim>angles>random")local Z=a.get_reference("rage>anti-aim>angles>antiaim override")local _=a.get_reference("rage>anti-aim>desync>fake")local a0=a.get_reference("rage>anti-aim>desync>fake amount")local a1=a.get_reference("rage>anti-aim>desync>compensate angle")local a2=a.get_reference("rage>anti-aim>desync>freestand fake")local a3=a.get_reference("rage>anti-aim>desync>flip fake with jitter")local a4=a.get_reference("rage>anti-aim>desync>roll lean")local a5=a.get_reference("rage>anti-aim>desync>ensure lean")local a6=a.get_reference("rage>anti-aim>desync>flip lean with jitter")local a7=a.get_reference("rage>anti-aim>fakelag>limit")local a8=a.get_reference("rage>anti-aim>desync>leg slide")Z:set_visible(false)J:set_visible(false)K:set_visible(false)L:set_visible(false)F:set_visible(false)Q:set_visible(false)R:set_visible(false)S:set_visible(false)T:set_visible(false)U:set_visible(false)V:set_visible(false)W:set_visible(false)X:set_visible(false)Y:set_visible(false)_:set_visible(false)a0:set_visible(false)a1:set_visible(false)a2:set_visible(false)a3:set_visible(false)a4:set_visible(false)a5:set_visible(false)a6:set_visible(false)a.add_keybind(C.left)a.add_keybind(C.back)a.add_keybind(C.right)a.add_keybind(C.fs)a.add_keybind(C.da_ovr)a.add_keybind(C.legitaa)Z:bind_to(C.aa_manual)J:bind_to(C.left)K:bind_to(C.back)L:bind_to(C.right)F:bind_to(C.fs)local a9=0;local aa={get_pose_params={"client.dll","55 8B EC 8B 45 08 57 8B F9 8B 4F 04 85 C9 75 15"}}local ab={animstate=0x9960,m_pStudioHdr=0x2950,landing_anim=0x109}function bool_to_int(ac)return ac and 1 or 0 end;function lerp(ad,ae,af)return ad+(ae-ad)*af end;function mix(ag,ah,ai)return{lerp(ag.r,ah.r,ai),lerp(ag.g,ah.g,ai),lerp(ag.b,ah.b,ai),lerp(ag.a,ah.a,ai)}end;function text_multicolor(aj,ak,al,am,an)local ao=0;local ap=""for aq,ac in pairs(aj)do ap=ap..ac.text end;local ar={}ar.x,ar.y=render.get_text_size(am,ap)for aq,ac in pairs(aj)do if an then ac.clr.a=an end;render.text(am,ak+ao-ar.x/2,al,ac.text,ac.clr)ao=ao+render.get_text_size(am,ac.text)end end;local as=function(at,au)return function(...)return at(au,...)end end;local av=ffi.typeof("uintptr_t**")local aw=ffi.cast(av,utils.find_interface("client.dll","VClientEntityList003"))local ax=as(ffi.cast("void*(__thiscall*)(void*, int)",aw[0][3]),aw)local ay=ffi.cast("struct {char pad[8]; float m_flStart; float m_flEnd; float m_flState;}*(__thiscall* )( void*, int )",utils.find_pattern(unpack(aa.get_pose_params)))local az={}local aA=function(aB,aC,aD,aE)aB=ffi.cast("unsigned int",aB)if aB==0x0 then return false end;local aF=ffi.cast("void**",aB+ab.m_pStudioHdr)[0]if aF==nil then return false end;local aG=ay(aF,aC)if aG==nil then return end;if az[aC]==nil then az[aC]={}az[aC].m_flStart=aG.m_flStart;az[aC].m_flEnd=aG.m_flEnd;az[aC].m_flState=aG.m_flState;az[aC].installed=false;return true end;if aD~=nil and not az[aC].installed then aG.m_flStart=aD;aG.m_flEnd=aE;aG.m_flState=(aG.m_flStart+aG.m_flEnd)/2;az[aC].installed=true;return true end;if az[aC].installed then aG.m_flStart=az[aC].m_flStart;aG.m_flEnd=az[aC].m_flEnd;aG.m_flState=az[aC].m_flState;az[aC].installed=false;return true end;return false end;local aH=false;local aI=function(aJ)local aK=entities[engine.get_local_player()]local aL=ax(engine.get_local_player())if aL==nil or aK:is_alive()==false or engine.is_in_game()==false then return end;local aM=ffi.cast("void**",ffi.cast("unsigned int",aL)+ab.animstate)[0]if aM==nil then return end;aM=ffi.cast("unsigned int",aM)if aM==0x0 then return end;for aq,aN in pairs(az)do aA(aL,aq)end;local aO=utils.random_float(-180,180)if C.leg_movement:get()==4 and C.animchangers:get()then aA(aL,8,0,0.001)aA(aL,9,0,0.001)aA(aL,10,0,0.001)a8:set(1)elseif C.leg_movement:get()==3 and C.animchangers:get()then aA(aL,7,0,0.001)a8:set(1)elseif C.leg_movement:get()==2 and C.animchangers:get()then aA(aL,0,aO,aO)a8:set(2)elseif C.leg_movement:get()==1 and C.animchangers:get()then aA(aL,0,aH and-180 or 160,aH and 180 or-160)a8:set(2)else aA(aL,0,-180,180)end;aH=not aH;if C.lean:get()==1 and C.animchangers:get()then aA(aL,2,aO,aO)else aA(aL,2,-180,180)end;if C.falling_anim:get()==1 and C.animchangers:get()then aA(aL,6,0.9,1)end end;local aP=function()local aL=ax(engine.get_local_player())if aL==nil then return end;for aq,aN in pairs(az)do aA(aL,aq)end end;local aQ=0;local aR=0;local aS=-180;function antiaim()local aL=entities.get_entity(engine.get_local_player())if aL==nil then return end;local aT=aL:get_prop("m_bIsDefusing")if aT then R:set(0)T:set(0)W:set(0)_:set(0)return else N:set(1)end;if C.legitaa:get()and not aT then if aQ<2 then aQ=aQ+1;return end;engine.exec("-use")O:set(0)P:set(0)Q:set(0)R:set(0)T:set(0)W:set(0)_:set(1)a0:set(-100)a3:set(0)a2:set(1)return else aQ=0;O:set(1)P:set(1)end;local aU=aL:get_prop("m_flDuckAmount")local aV=aL:get_prop("m_hGroundEntity")==-1;local aW=I:get()==1;local aX=math.sqrt(aL:get_prop("m_vecVelocity[0]")*aL:get_prop("m_vecVelocity[0]")+aL:get_prop("m_vecVelocity[1]")*aL:get_prop("m_vecVelocity[1]"))if aR>0 and C.defensive_aa:get()and D:get()==1 and E:get()==0 then if aS>170 then aS=-180 end;O:set(3)R:set(1)S:set(C.def_type:get()==1 and aS or 180)T:set(false)W:set(C.def_type:get()==1 and 0 or 1)X:set(140)_:set(true)a0:set(-100)a3:set(false)a2:set(2)aS=aS+20;return end;if C.jit_dis:get()[1]and F:get()==1 or C.jit_dis:get()[2]and(J:get()==1 or K:get()==1 or L:get()==1)then Q:set(1)R:set(0)T:set(0)W:set(0)_:set(1)a0:set(-100)a3:set(0)a2:set(2)return end;local aY=math.floor(global_vars.tickcount%6/2)local aZ=math.floor(global_vars.tickcount%8/4)*2;if aV and aU>0.5 then Q:set(C.ad_at_target:get())R:set(C.ad_yaw_add:get()>0 and true or false)if C.ad_yaw_add:get()>2 then S:set(-C.ad_add:get()+C.ad_add:get()*aZ)else S:set(C.ad_yaw_add:get()==2 and-C.ad_add:get()+C.ad_add:get()*aY or C.ad_add:get())end;T:set(C.ad_spin:get())U:set(C.ad_spin_range:get())V:set(C.ad_spin_speed:get())W:set(C.ad_jit:get())X:set(C.ad_jit_range:get())Y:set(C.ad_jit_rnd:get())_:set(C.ad_dsy:get()>0 and true or false)if C.ad_dsy:get()>2 then a0:set(aZ>0 and C.ad_dsy:get()>1 and-C.ad_dsy_amt:get()or C.ad_dsy_amt:get())else a0:set(aY>1 and C.ad_dsy:get()>1 and-C.ad_dsy_amt:get()or C.ad_dsy_amt:get())end;a2:set(C.ad_dsy_fs:get())a3:set(C.ad_dsy_jit:get())elseif aV then Q:set(C.ai_at_target:get())R:set(C.ai_yaw_add:get()>0 and true or false)if C.ai_yaw_add:get()>2 then S:set(-C.ai_add:get()+C.ai_add:get()*aZ)else S:set(C.ai_yaw_add:get()==2 and-C.ai_add:get()+C.ai_add:get()*aY or C.ai_add:get())end;T:set(C.ai_spin:get())U:set(C.ai_spin_range:get())V:set(C.ai_spin_speed:get())W:set(C.ai_jit:get())X:set(C.ai_jit_range:get())Y:set(C.ai_jit_rnd:get())_:set(C.ai_dsy:get()>0 and true or false)if C.ai_dsy:get()>2 then a0:set(aZ>0 and C.ai_dsy:get()>1 and-C.ai_dsy_amt:get()or C.ai_dsy_amt:get())else a0:set(aY>1 and C.ai_dsy:get()>1 and-C.ai_dsy_amt:get()or C.ai_dsy_amt:get())end;a2:set(C.ai_dsy_fs:get())a3:set(C.ai_dsy_jit:get())elseif aW and aX>5 then Q:set(C.sw_at_target:get())R:set(C.sw_yaw_add:get()>0 and true or false)if C.sw_yaw_add:get()>2 then S:set(-C.sw_add:get()+C.sw_add:get()*aZ)else S:set(C.sw_yaw_add:get()==2 and-C.sw_add:get()+C.sw_add:get()*aY or C.sw_add:get())end;T:set(C.sw_spin:get())U:set(C.sw_spin_range:get())V:set(C.sw_spin_speed:get())W:set(C.sw_jit:get())X:set(C.sw_jit_range:get())Y:set(C.sw_jit_rnd:get())_:set(C.sw_dsy:get()>0 and true or false)if C.sw_dsy:get()>2 then a0:set(aZ>0 and C.sw_dsy:get()>1 and-C.sw_dsy_amt:get()or C.sw_dsy_amt:get())else a0:set(aY>1 and C.sw_dsy:get()>1 and-C.sw_dsy_amt:get()or C.sw_dsy_amt:get())end;a2:set(C.sw_dsy_fs:get())a3:set(C.sw_dsy_jit:get())elseif aU>0.5 then Q:set(C.dc_at_target:get())R:set(C.dc_yaw_add:get()>0 and true or false)if C.dc_yaw_add:get()>2 then S:set(-C.dc_add:get()+C.dc_add:get()*aZ)else S:set(C.dc_yaw_add:get()==2 and-C.dc_add:get()+C.dc_add:get()*aY or C.dc_add:get())end;T:set(C.dc_spin:get())U:set(C.dc_spin_range:get())V:set(C.dc_spin_speed:get())W:set(C.dc_jit:get())X:set(C.dc_jit_range:get())Y:set(C.dc_jit_rnd:get())_:set(C.dc_dsy:get()>0 and true or false)if C.dc_dsy:get()>2 then a0:set(aZ>0 and C.dc_dsy:get()>1 and-C.dc_dsy_amt:get()or C.dc_dsy_amt:get())else a0:set(aY>1 and C.dc_dsy:get()>1 and-C.dc_dsy_amt:get()or C.dc_dsy_amt:get())end;a2:set(C.dc_dsy_fs:get())a3:set(C.dc_dsy_jit:get())elseif aX<5 then Q:set(C.st_at_target:get())R:set(C.st_yaw_add:get()>0 and true or false)if C.st_yaw_add:get()>2 then S:set(-C.st_add:get()+C.st_add:get()*aZ)else S:set(C.st_yaw_add:get()==2 and-C.st_add:get()+C.st_add:get()*aY or C.st_add:get())end;T:set(C.st_spin:get())U:set(C.st_spin_range:get())V:set(C.st_spin_speed:get())W:set(C.st_jit:get())X:set(C.st_jit_range:get())Y:set(C.st_jit_rnd:get())_:set(C.st_dsy:get()>0 and true or false)if C.st_dsy:get()>2 then a0:set(aZ>0 and C.st_dsy:get()>1 and-C.st_dsy_amt:get()or C.st_dsy_amt:get())else a0:set(aY>1 and C.st_dsy:get()>1 and-C.st_dsy_amt:get()or C.st_dsy_amt:get())end;a2:set(C.st_dsy_fs:get())a3:set(C.st_dsy_jit:get())else Q:set(C.mv_at_target:get())R:set(C.mv_yaw_add:get()>0 and true or false)if C.mv_yaw_add:get()>2 then S:set(-C.mv_add:get()+C.mv_add:get()*aZ)else S:set(C.mv_yaw_add:get()==2 and-C.mv_add:get()+C.mv_add:get()*aY or C.mv_add:get())end;T:set(C.mv_spin:get())U:set(C.mv_spin_range:get())V:set(C.mv_spin_speed:get())W:set(C.mv_jit:get())X:set(C.mv_jit_range:get())Y:set(C.mv_jit_rnd:get())_:set(C.mv_dsy:get()>0 and true or false)if C.mv_dsy:get()>2 then a0:set(aZ>0 and C.mv_dsy:get()>1 and-C.mv_dsy_amt:get()or C.mv_dsy_amt:get())else a0:set(aY>1 and C.mv_dsy:get()>1 and-C.mv_dsy_amt:get()or C.mv_dsy_amt:get())end;a2:set(C.mv_dsy_fs:get())a3:set(C.mv_dsy_jit:get())end end;local a_=0;function on_create_move()aI()local aL=entities.get_entity(engine.get_local_player())if aL==nil then return end;local aL=entities.get_entity(engine.get_local_player())if aL==nil then return end;if C.defensive_aa:get()then local b0=aL:get_prop("m_nTickBase")if b0>a_ then a_=b0;if aR>0 and aR<C.def_delay:get()+1 then aR=aR+1 elseif aR>C.def_delay:get()then aR=0 end else aR=1 end end;local b1=bit.band(aL:get_prop("m_fFlags"),1)if b1==1 then a9=a9+1 else a9=0 end;if C.fl_ovr:get()[1]and D:get()==1 or C.fl_ovr:get()[2]and E:get()==1 then a7:set(1)else a7:set(14)end;antiaim()end;function get_button(aJ,b2)return bit.band(aJ:get_buttons(),b2)~=0 end;local b3=false;function on_run_command(aJ)if not C.defensive_aa:get()then return end;local b4,b5=aJ:get_view_angles()local b6=get_button(aJ,csgo.in_attack)local b7=C.def_pitch:get()if b7==0 then b7=89 elseif b7==1 then b7=45 elseif b7==2 then b7=0 elseif b7==3 then b7=-45 elseif b7==4 then b7=-89 elseif b7==5 then if b3 then b7=-45 else b7=45 end elseif b7==6 then if b3 then b7=-89 else b7=89 end else b7=C.def_custom_pitch:get()end;b3=not b3;if aR>0 and not b6 and D:get()==1 and E:get()==0 then aJ:set_view_angles(b7,b5+180,0)end end;function menu_handler()local b8=C.tabs:get()local b9=b8==0;local ba=b8==1;local bb=b8==2;local bc=C.aa_cond:get()==0;local bd=C.aa_cond:get()==1;local be=C.aa_cond:get()==2;local bf=C.aa_cond:get()==3;local bg=C.aa_cond:get()==4;local bh=C.aa_cond:get()==5;local bi=C.animchangers:get()local bj=C.leg_movement:get()==1;C.st_at_target:set_visible(bc)C.mv_at_target:set_visible(bd)C.ai_at_target:set_visible(be)C.ad_at_target:set_visible(bf)C.dc_at_target:set_visible(bg)C.sw_at_target:set_visible(bh)C.st_yaw_add:set_visible(bc)C.mv_yaw_add:set_visible(bd)C.ai_yaw_add:set_visible(be)C.ad_yaw_add:set_visible(bf)C.dc_yaw_add:set_visible(bg)C.sw_yaw_add:set_visible(bh)C.st_add:set_visible(bc and C.st_yaw_add:get()>0)C.mv_add:set_visible(bd and C.mv_yaw_add:get()>0)C.ai_add:set_visible(be and C.ai_yaw_add:get()>0)C.ad_add:set_visible(bf and C.ad_yaw_add:get()>0)C.dc_add:set_visible(bg and C.dc_yaw_add:get()>0)C.sw_add:set_visible(bh and C.sw_yaw_add:get()>0)C.st_spin:set_visible(bc)C.mv_spin:set_visible(bd)C.ai_spin:set_visible(be)C.ad_spin:set_visible(bf)C.dc_spin:set_visible(bg)C.sw_spin:set_visible(bh)C.st_spin_range:set_visible(bc and C.st_spin:get())C.mv_spin_range:set_visible(bd and C.mv_spin:get())C.ai_spin_range:set_visible(be and C.ai_spin:get())C.ad_spin_range:set_visible(bf and C.ad_spin:get())C.dc_spin_range:set_visible(bg and C.dc_spin:get())C.sw_spin_range:set_visible(bh and C.sw_spin:get())C.st_spin_speed:set_visible(bc and C.st_spin:get())C.mv_spin_speed:set_visible(bd and C.mv_spin:get())C.ai_spin_speed:set_visible(be and C.ai_spin:get())C.ad_spin_speed:set_visible(bf and C.ad_spin:get())C.dc_spin_speed:set_visible(bg and C.dc_spin:get())C.sw_spin_speed:set_visible(bh and C.sw_spin:get())C.st_jit:set_visible(bc)C.mv_jit:set_visible(bd)C.ai_jit:set_visible(be)C.ad_jit:set_visible(bf)C.dc_jit:set_visible(bg)C.sw_jit:set_visible(bh)C.st_jit_range:set_visible(bc and C.st_jit:get())C.mv_jit_range:set_visible(bd and C.mv_jit:get())C.ai_jit_range:set_visible(be and C.ai_jit:get())C.ad_jit_range:set_visible(bf and C.ad_jit:get())C.dc_jit_range:set_visible(bg and C.dc_jit:get())C.sw_jit_range:set_visible(bh and C.sw_jit:get())C.st_jit_rnd:set_visible(bc and C.st_jit:get())C.mv_jit_rnd:set_visible(bd and C.mv_jit:get())C.ai_jit_rnd:set_visible(be and C.ai_jit:get())C.ad_jit_rnd:set_visible(bf and C.ad_jit:get())C.dc_jit_rnd:set_visible(bg and C.dc_jit:get())C.sw_jit_rnd:set_visible(bh and C.sw_jit:get())C.st_dsy:set_visible(bc)C.mv_dsy:set_visible(bd)C.ai_dsy:set_visible(be)C.ad_dsy:set_visible(bf)C.dc_dsy:set_visible(bg)C.sw_dsy:set_visible(bh)C.st_dsy_amt:set_visible(bc and C.st_dsy:get()>0)C.mv_dsy_amt:set_visible(bd and C.mv_dsy:get()>0)C.ai_dsy_amt:set_visible(be and C.ai_dsy:get()>0)C.ad_dsy_amt:set_visible(bf and C.ad_dsy:get()>0)C.dc_dsy_amt:set_visible(bg and C.dc_dsy:get()>0)C.sw_dsy_amt:set_visible(bh and C.sw_dsy:get()>0)C.st_dsy_fs:set_visible(bc and C.st_dsy:get()>0)C.mv_dsy_fs:set_visible(bd and C.mv_dsy:get()>0)C.ai_dsy_fs:set_visible(be and C.ai_dsy:get()>0)C.ad_dsy_fs:set_visible(bf and C.ad_dsy:get()>0)C.dc_dsy_fs:set_visible(bg and C.dc_dsy:get()>0)C.sw_dsy_fs:set_visible(bh and C.sw_dsy:get()>0)C.st_dsy_jit:set_visible(bc and C.st_dsy:get()>0)C.mv_dsy_jit:set_visible(bd and C.mv_dsy:get()>0)C.ai_dsy_jit:set_visible(be and C.ai_dsy:get()>0)C.ad_dsy_jit:set_visible(bf and C.ad_dsy:get()>0)C.dc_dsy_jit:set_visible(bg and C.dc_dsy:get()>0)C.sw_dsy_jit:set_visible(bh and C.sw_dsy:get()>0)C.def_pitch:set_visible(C.defensive_aa:get())C.def_custom_pitch:set_visible(C.defensive_aa:get()and C.def_pitch:get()==7)C.def_type:set_visible(C.defensive_aa:get())C.def_delay:set_visible(C.defensive_aa:get())C.da_ovr:set_visible(b9)C.fl_ovr:set_visible(b9)C.inds:set_visible(ba)C.log_offset:set_visible(ba and C.inds:get()[2])C.removals:set_visible(ba)C.sunset:set_visible(ba)C.sunset_x:set_visible(ba and C.sunset:get())C.sunset_y:set_visible(ba and C.sunset:get())C.sunset_z:set_visible(ba and C.sunset:get())C.fog:set_visible(ba)C.fog_start:set_visible(ba and C.fog:get())C.fog_end:set_visible(ba and C.fog:get())C.fog_strength:set_visible(ba and C.fog:get())C.ratio:set_visible(ba)C.animchangers:set_visible(bb)C.leg_movement:set_visible(bb and bi)C.lean:set_visible(bb and bi)C.falling_anim:set_visible(bb and bi)end;local bk=0;local bl=0;local bm=0;local bn=0;local bo=0;local bp=0;local bq=0;local br=0;local bs=0;local bt=0;local bu=0;local bv=0;local bw=0;local bx=0;local by=0;local bz=0;local bA=0;local bB=0;function on_paint()menu_handler()if engine.is_in_game()==false then return end;local bC=510/string.len(b)local bD,bE=render.get_text_size(g,b)local bF=0;for bG=1,string.len(b)do local bH=string.sub(b,bG,bG)local bI,bJ=render.get_text_size(g,bH)local bK=math.min((global_vars.tickcount*5-bG*bC)%1020,510)local bL=bK>255 and 510-bK or bK;local bM=mix(render.color(255,255,255,120),render.color(255,255,255,255),bL/255)render.text(g,e/2-bD/2+bF,f-10,bH,render.color(unpack(bM)),render.align_left,render.align_center)bF=bF+bI end;local aK=entities[engine.get_local_player()]if aK:is_alive()==false then return end;if C.inds:get()[1]then local bN=aK:get_prop("m_bIsScoped",0)bk=lerp(bk,bN and 1 or 0,0.07)bl=lerp(bl,info.fatality.can_fastfire and 255 or 60,0.07)bm=lerp(bm,D:get()==1 and 255 or 0,0.2)bn=lerp(bn,E:get()==1 and 255 or 0,0.2)bo=lerp(bo,F:get()==1 and 255 or 0,0.2)bp=lerp(bp,G:get()==1 and 255 or 0,0.2)bq=lerp(bq,H:get()==1 and 255 or 0,0.2)br=lerp(br,C.da_ovr:get()and 255 or 0,0.2)local bO=render.color(255,bl,bl,bm)local bP=0;local bQ="pizdanogam°"local bR="doubletap"local bS="onshot"local bT="freestand"local bU="damage"local bV="safe"local bW="dormant"local bX,bY=render.get_text_size(g,bR)local bZ,b_=render.get_text_size(g,bS)local c0,c1=render.get_text_size(g,bT)local c2,c3=render.get_text_size(g,bU)local c4,c5=render.get_text_size(g,bV)local c6,c7=render.get_text_size(g,bW)local c8,c9=render.get_text_size(h,bQ)local ca=bk*(c8/2+2)local cb=510/string.len(bQ)local cc=0;local cd=C.ind_first:get()local ce=C.ind_second:get()for bG=1,string.len(bQ)do local bH=string.sub(bQ,bG,bG)local bI,bJ=render.get_text_size(h,bH)local bK=math.min((global_vars.tickcount*5-bG*cb)%1020,510)local bL=bK>255 and 510-bK or bK;local bM=mix(cd,ce,bL/255)render.text(h,e/2-c8/2+ca+cc,f/2+20,bH,render.color(unpack(bM)),render.align_left,render.align_center)cc=cc+bI end;bP=bP+12;if H:get()==1 or bq>1 then render.text(g,e/2-(c4/2-bk*(c4/2+2)),f/2+20+bP,bV,render.color(255,255,255,bq),render.align_left,render.align_center)bP=bP+10 end;if D:get()==1 or bm>1 then render.text(g,e/2-(bX/2-bk*(bX/2+2)),f/2+20+bP,bR,bO,render.align_left,render.align_center)bP=bP+10 end;if E:get()==1 or bn>1 then render.text(g,e/2-(bZ/2-bk*(bZ/2+2)),f/2+20+bP,bS,render.color(255,255,255,bn),render.align_left,render.align_center)bP=bP+10 end;if F:get()==1 or bo>1 then render.text(g,e/2-(c0/2-bk*(c0/2+2)),f/2+20+bP,bT,render.color(255,255,255,bo),render.align_left,render.align_center)bP=bP+10 end;if G:get()==1 or bp>1 then render.text(g,e/2-(c2/2-bk*(c2/2+2)),f/2+20+bP,bU,render.color(255,255,255,bp),render.align_left,render.align_center)bP=bP+10 end;if C.da_ovr:get()or br>1 then render.text(g,e/2-(c6/2-bk*(c6/2+2)),f/2+20+bP,bW,render.color(255,255,255,br),render.align_left,render.align_center)bP=bP+10 end end;if C.inds:get()[3]then bs=lerp(bs,J:get()==1 and C.ind_first:get().r or 0,0.1)bt=lerp(bt,J:get()==1 and C.ind_first:get().g or 0,0.1)bu=lerp(bu,J:get()==1 and C.ind_first:get().b or 0,0.1)bv=lerp(bv,J:get()==1 and C.ind_first:get().a or 100,0.1)bw=lerp(bw,L:get()==1 and C.ind_first:get().r or 0,0.1)bx=lerp(bx,L:get()==1 and C.ind_first:get().g or 0,0.1)by=lerp(by,L:get()==1 and C.ind_first:get().b or 0,0.1)bz=lerp(bz,L:get()==1 and C.ind_first:get().a or 100,0.1)render.triangle_filled(e/2-64,f/2-bk*16,e/2-50,f/2-7-bk*16,e/2-50,f/2+7-bk*16,render.color(bs,bt,bu,bv))render.triangle_filled(e/2+64,f/2-bk*16,e/2+50,f/2-7-bk*16,e/2+50,f/2+7-bk*16,render.color(bw,bx,by,bz))end;local cf=C.ratio:get()*0.01;local cg=bool_to_int(C.removals:get()[1]==false)local ch=bool_to_int(C.removals:get()[2])M:set(C.da_ovr:get())i:set_int(cg)j:set_float(cf)k:set_int(ch)if C.inds:get()[2]then for aq,ac in pairs(d)do ac.info.alpha:direct(255)if 2.9-(global_vars.tickcount/64-ac.info.tick/64)<0 then ac.info.alpha:direct(0)end;local ap=""for bG,ci in pairs(ac.data)do ap=ap..ci.text end;local cj,ck=render.get_text_size(g,ap)render.rect_filled_rounded(e/2-cj/2-6,f/2+156+C.log_offset:get()+24*(aq-1)+ac.info.alpha:get_value()/255*24,math.floor(e/2+cj/2+8),f/2+176+C.log_offset:get()+24*(aq-1)+ac.info.alpha:get_value()/255*24,render.color(10,10,10,ac.info.alpha:get_value()),2)render.rect(e/2-cj/2-5,f/2+157+C.log_offset:get()+24*(aq-1)+ac.info.alpha:get_value()/255*24,math.floor(e/2+cj/2+7),f/2+175+C.log_offset:get()+24*(aq-1)+ac.info.alpha:get_value()/255*24,render.color(40,40,40,ac.info.alpha:get_value()))text_multicolor(ac.data,e/2,f/2+160+C.log_offset:get()+24*(aq-1)+ac.info.alpha:get_value()/255*24,g,ac.info.alpha:get_value())if ac.info.alpha:get_value()<=0.1 and 2.9-(global_vars.tickcount/64-ac.info.tick/64)<0 then table.remove(d,aq)end end end;render.rect_filled_rounded(10,10,20,20,render.color(255,255,255,255),1.5)l:set_int(C.sunset:get()and 1 or 0)m:set_int(C.sunset_x:get())n:set_int(C.sunset_y:get())o:set_int(C.sunset_z:get())p:set_int(C.fog:get()and 1 or 0)s:set_int(C.fog_start:get())t:set_int(C.fog_end:get())q:set_string(tostring(C.fog_col:get().r).." "..tostring(C.fog_col:get().g).." "..tostring(C.fog_col:get().b))r:set_float(C.fog_strength:get()/100)end;function on_shot_registered(cl)if cl.result~="hit"and c[cl.client_hitgroup]~=nil then local cm=render.color("#FFFFFF")local cn=C.ind_first:get()table.insert(d,{data={{text="missed",clr=cm},{text=" %s":format(engine.get_player_info(cl.target).name),clr=cn},{text="'s",clr=cm},{text=" %s":format(c[cl.client_hitgroup]),clr=cn},{text=" due to",clr=cm},{text=" %s":format(cl.result),clr=cn},{text=" (",clr=cm},{text="%s":format(math.floor(.5+cl.hitchance)),clr=cn},{text=[[% hitchance)]],clr=cm}},info={tick=cl.tick,alpha=render.create_animator_float(0,.1)}})end end;function on_player_hurt(cl)if not C.inds:get()[2]then return end;local co=cl:get_int("attacker")local cp=cl:get_int("userid")local cq=engine.get_player_for_user_id(cp)local cr=engine.get_player_info(cq)['name']if engine.get_player_for_user_id(co)==engine.get_local_player()and cp~=co then local cm=render.color("#FFFFFF")local cn=C.ind_first:get()table.insert(d,{data={{text="hit",clr=cm},{text=" %s":format(cr),clr=cn},{text="'s",clr=cm},{text=" %s":format(c[cl:get_int("hitgroup")]),clr=cn},{text=" for",clr=cm},{text=" %s":format(cl:get_int("dmg_health")),clr=cn},{text=" damage (",clr=cm},{text=cl:get_int("health")==0 and""or"%s":format(cl:get_int("health")),clr=cn},{text=cl:get_int("health")==0 and[[dead)]]or[[ health remaining)]],clr=cm}},info={tick=global_vars.tickcount,alpha=render.create_animator_float(0,.1)}})end end;function on_round_start()aR=0 end;function on_shutdown()Z:set_visible(true)J:set_visible(true)K:set_visible(true)L:set_visible(true)F:set_visible(true)Q:set_visible(true)R:set_visible(true)S:set_visible(true)T:set_visible(true)U:set_visible(true)V:set_visible(true)W:set_visible(true)X:set_visible(true)Y:set_visible(true)_:set_visible(true)a0:set_visible(true)a1:set_visible(true)a2:set_visible(true)a3:set_visible(true)a4:set_visible(true)a5:set_visible(true)a6:set_visible(true)aP()end
+---@diagnostic disable: lowercase-global, undefined-global, deprecated
+local menu = require("oop_menu")
+
+if not MENU_LIB_ERROR_OUTDATED then
+    return error("outdated library")
+elseif MENU_LIB_VER ~= 1 then
+    return MENU_LIB_ERROR_OUTDATED()
+end
+
+local script_name = "PIZDA_NOGAM"
+
+local hitgroup_str = {
+    [0] = 'generic',
+    'head', 'chest', 'stomach',
+    'left arm', 'right arm',
+    'left leg', 'right leg',
+    'neck', 'generic', 'gear'
+}
+
+local logs_data = {}
+local w, h = render.get_screen_size()
+local verdana = render.create_font("verdana.ttf", 11, render.font_flag_shadow)
+local verdanab = render.create_font("verdanab.ttf", 11, render.font_flag_shadow)
+
+local r_3dsky = cvar.r_3dsky
+local r_aspectratio = cvar.r_aspectratio
+local mat_fullbright = cvar.mat_fullbright
+local cl_csm_rot_ovr = cvar.cl_csm_rot_override
+local cl_csm_rot_x = cvar.cl_csm_rot_x
+local cl_csm_rot_y = cvar.cl_csm_rot_y
+local cl_csm_rot_z = cvar.cl_csm_rot_z
+local fog_ovr = cvar.fog_override
+local fog_color = cvar.fog_color
+local fog_maxdensity = cvar.fog_maxdensity
+local fog_start = cvar.fog_start
+local fog_end = cvar.fog_end
+
+local aa_place = "rage>anti-aim>angles"
+local aa_desync = "rage>anti-aim>desync"
+
+local aa_states = { "standing", "moving", "in air", "in air duck", "ducking", "slowwalking" }
+local add_types = { "none", "static", "3-way", "slow jitter" }
+local dsy_types = { "none", "static", "3-way", "slow jitter" }
+local def_pitch_t = { "down", "half down", "zero", "half up", "up", "jitter half up/half down", "jitter up/down", "custom" }
+local def_yaw_t = { "180 jitter", "spin" }
+local fs_types = { "none", "peek desync", "peek real" }
+
+local ui = {
+    tabs = menu.add_listbox("", "lua>tab a", 3, false, { "~ ragebot", "~ visuals", "~ misc" }),
+
+    name = menu.add_listbox("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", "lua>tab a", 1, false, { "                 PIZDA_NOGAM", "anti-aim builder is in rage>anti-aim" }),
+
+    aa_cond = menu.add_combo("[PIZDANOGAM] condition", aa_place, aa_states),
+
+    legitaa = menu.add_checkbox("legit aa", aa_place),
+
+    st_yaw_add = menu.add_combo("yaw add ", aa_place, add_types),
+    mv_yaw_add = menu.add_combo("yaw add  ", aa_place, add_types),
+    ai_yaw_add = menu.add_combo("yaw add   ", aa_place, add_types),
+    ad_yaw_add = menu.add_combo("yaw add    ", aa_place, add_types),
+    dc_yaw_add = menu.add_combo("yaw add     ", aa_place, add_types),
+    sw_yaw_add = menu.add_combo("yaw add      ", aa_place, add_types),
+    st_add = menu.add_slider("add ", aa_place, -180, 180, 1),
+    mv_add = menu.add_slider("add  ", aa_place, -180, 180, 1),
+    ai_add = menu.add_slider("add   ", aa_place, -180, 180, 1),
+    ad_add = menu.add_slider("add    ", aa_place, -180, 180, 1),
+    dc_add = menu.add_slider("add     ", aa_place, -180, 180, 1),
+    sw_add = menu.add_slider("add      ", aa_place, -180, 180, 1),
+    st_at_target = menu.add_checkbox("yaw at target", aa_place),
+    mv_at_target = menu.add_checkbox("yaw at target ", aa_place),
+    ai_at_target = menu.add_checkbox("yaw at target  ", aa_place),
+    ad_at_target = menu.add_checkbox("yaw at target   ", aa_place),
+    dc_at_target = menu.add_checkbox("yaw at target    ", aa_place),
+    sw_at_target = menu.add_checkbox("yaw at target     ", aa_place),
+    st_spin = menu.add_checkbox("spin ", aa_place),
+    mv_spin = menu.add_checkbox("spin  ", aa_place),
+    ai_spin = menu.add_checkbox("spin   ", aa_place),
+    ad_spin = menu.add_checkbox("spin    ", aa_place),
+    dc_spin = menu.add_checkbox("spin     ", aa_place),
+    sw_spin = menu.add_checkbox("spin      ", aa_place),
+    st_spin_range = menu.add_slider("spin range ", aa_place, 0, 180, 1),
+    mv_spin_range = menu.add_slider("spin range  ", aa_place, 0, 180, 1),
+    ai_spin_range = menu.add_slider("spin range   ", aa_place, 0, 180, 1),
+    ad_spin_range = menu.add_slider("spin range    ", aa_place, 0, 180, 1),
+    dc_spin_range = menu.add_slider("spin range     ", aa_place, 0, 180, 1),
+    sw_spin_range = menu.add_slider("spin range      ", aa_place, 0, 180, 1),
+    st_spin_speed = menu.add_slider("spin speed ", aa_place, 0, 180, 1),
+    mv_spin_speed = menu.add_slider("spin speed  ", aa_place, 0, 180, 1),
+    ai_spin_speed = menu.add_slider("spin speed   ", aa_place, 0, 180, 1),
+    ad_spin_speed = menu.add_slider("spin speed    ", aa_place, 0, 180, 1),
+    dc_spin_speed = menu.add_slider("spin speed     ", aa_place, 0, 180, 1),
+    sw_spin_speed = menu.add_slider("spin speed      ", aa_place, 0, 180, 1),
+    st_jit = menu.add_checkbox("jitter ", aa_place),
+    mv_jit = menu.add_checkbox("jitter  ", aa_place),
+    ai_jit = menu.add_checkbox("jitter   ", aa_place),
+    ad_jit = menu.add_checkbox("jitter    ", aa_place),
+    dc_jit = menu.add_checkbox("jitter     ", aa_place),
+    sw_jit = menu.add_checkbox("jitter      ", aa_place),
+    st_jit_range = menu.add_slider("jitter range ", aa_place, 0, 180, 1),
+    mv_jit_range = menu.add_slider("jitter range  ", aa_place, 0, 180, 1),
+    ai_jit_range = menu.add_slider("jitter range   ", aa_place, 0, 180, 1),
+    ad_jit_range = menu.add_slider("jitter range    ", aa_place, 0, 180, 1),
+    dc_jit_range = menu.add_slider("jitter range     ", aa_place, 0, 180, 1),
+    sw_jit_range = menu.add_slider("jitter range      ", aa_place, 0, 180, 1),
+    st_jit_rnd = menu.add_checkbox("random ", aa_place),
+    mv_jit_rnd = menu.add_checkbox("random  ", aa_place),
+    ai_jit_rnd = menu.add_checkbox("random   ", aa_place),
+    ad_jit_rnd = menu.add_checkbox("random    ", aa_place),
+    dc_jit_rnd = menu.add_checkbox("random     ", aa_place),
+    sw_jit_rnd = menu.add_checkbox("random      ", aa_place),
+
+    defensive_aa = menu.add_checkbox("defensive aa", aa_place),
+    def_pitch = menu.add_combo("pitch type", aa_place, def_pitch_t),
+    def_custom_pitch = menu.add_slider("custom pitch", aa_place, -89, 89, 1),
+    def_type = menu.add_combo("yaw type", aa_place, def_yaw_t),
+    def_delay = menu.add_slider("ticks to flick", aa_place, 1, 16, 1),
+
+    jit_dis = menu.add_multi_combo("jitter disablers", aa_place, { "on freestand", "on manual aa" }),
+    aa_manual = menu.add_checkbox("anti-aim override", aa_place),
+    left = menu.add_checkbox("left ", aa_place),
+    back = menu.add_checkbox("back ", aa_place),
+    right = menu.add_checkbox("right ", aa_place),
+    fs = menu.add_checkbox("freestand ", aa_place),
+    st_dsy = menu.add_combo("desync ", aa_desync, dsy_types),
+    mv_dsy = menu.add_combo("desync  ", aa_desync, dsy_types),
+    ai_dsy = menu.add_combo("desync   ", aa_desync, dsy_types),
+    ad_dsy = menu.add_combo("desync    ", aa_desync, dsy_types),
+    dc_dsy = menu.add_combo("desync     ", aa_desync, dsy_types),
+    sw_dsy = menu.add_combo("desync      ", aa_desync, dsy_types),
+    st_dsy_amt = menu.add_slider("desync amount ", aa_desync, -100, 100, 1),
+    mv_dsy_amt = menu.add_slider("desync amount  ", aa_desync, -100, 100, 1),
+    ai_dsy_amt = menu.add_slider("desync amount   ", aa_desync, -100, 100, 1),
+    ad_dsy_amt = menu.add_slider("desync amount    ", aa_desync, -100, 100, 1),
+    dc_dsy_amt = menu.add_slider("desync amount     ", aa_desync, -100, 100, 1),
+    sw_dsy_amt = menu.add_slider("desync amount      ", aa_desync, -100, 100, 1),
+    st_dsy_fs = menu.add_combo("freestand desync", aa_desync, fs_types),
+    mv_dsy_fs = menu.add_combo("freestand desync ", aa_desync, fs_types),
+    ai_dsy_fs = menu.add_combo("freestand desync  ", aa_desync, fs_types),
+    ad_dsy_fs = menu.add_combo("freestand desync   ", aa_desync, fs_types),
+    dc_dsy_fs = menu.add_combo("freestand desync    ", aa_desync, fs_types),
+    sw_dsy_fs = menu.add_combo("freestand desync     ", aa_desync, fs_types),
+    st_dsy_jit = menu.add_checkbox("switch desync with jitter ", aa_desync),
+    mv_dsy_jit = menu.add_checkbox("switch desync with jitter  ", aa_desync),
+    ai_dsy_jit = menu.add_checkbox("switch desync with jitter   ", aa_desync),
+    ad_dsy_jit = menu.add_checkbox("switch desync with jitter    ", aa_desync),
+    dc_dsy_jit = menu.add_checkbox("switch desync with jitter     ", aa_desync),
+    sw_dsy_jit = menu.add_checkbox("switch desync with jitter      ", aa_desync),
+
+    da_ovr = menu.add_checkbox("dormant aimbot override", "lua>tab b"),
+    fl_ovr = menu.add_multi_combo("disable fakelag on", "lua>tab b", { "double tap", "hide shots" }),
+
+    inds = menu.add_multi_combo("windows", "lua>tab b", { "inds under crosshair", "logs under crosshair", "manual aa indication" }),
+    ind_first = menu.add_colorpicker("lua>tab b>windows", true, render.color(200, 220, 255, 255)),
+    ind_second = menu.add_colorpicker("lua>tab b>windows", true, render.color(160, 200, 230, 160)),
+    log_offset = menu.add_slider("logs y", "lua>tab b", 0, h / 2 - 160, 1),
+    removals = menu.add_multi_combo("visual removals", "lua>tab b", { "3d skybox", "lighting" }),
+
+    sunset = menu.add_checkbox("sunset", "lua>tab b"),
+    sunset_x = menu.add_slider("direction x", "lua>tab b", -100, 100, 1),
+    sunset_y = menu.add_slider("direction y", "lua>tab b", -100, 100, 1),
+    sunset_z = menu.add_slider("direction z", "lua>tab b", -100, 100, 1),
+
+    fog = menu.add_checkbox("world fog", "lua>tab b"),
+    fog_col = menu.add_colorpicker("lua>tab b>world fog", false, render.color(255, 255, 255, 100)),
+    fog_start = menu.add_slider("start", "lua>tab b", 0, 2500, 1),
+    fog_end = menu.add_slider("end", "lua>tab b", 0, 2500, 1),
+    fog_strength = menu.add_slider("density", "lua>tab b", 0, 100, 1),
+    
+    ratio = menu.add_slider("aspect ratio", "lua>tab b", 0, 200, 1),
+
+    animchangers = menu.add_checkbox("animation modifiers", "lua>tab b"),
+    leg_movement = menu.add_combo("leg movement type", "lua>tab b", { "default", "jitter", "random", "moonwalk", "no animation" }),
+    falling_anim = menu.add_combo("falling animation style", "lua>tab b", { "default", "static" }),
+    lean = menu.add_combo("lean yaw style", "lua>tab b", { "default", "random" })
+}
+
+local dt_ref = menu.get_reference("rage>aimbot>aimbot>double tap")
+local hs_ref = menu.get_reference("rage>aimbot>aimbot>hide shot")
+local fs_ref = menu.get_reference("rage>anti-aim>angles>freestand")
+local md_ref = menu.get_reference("rage>aimbot>ssg08>scout>override")
+local ba_ref = menu.get_reference("rage>aimbot>aimbot>force extra safety")
+local sw_ref = menu.get_reference("misc>movement>slide")
+local left_ref = menu.get_reference("rage>anti-aim>angles>left")
+local back_ref = menu.get_reference("rage>anti-aim>angles>back")
+local right_ref = menu.get_reference("rage>anti-aim>angles>right")
+local da_ref = menu.get_reference("rage>aimbot>aimbot>target dormant")
+
+local aa_check_ref = menu.get_reference("rage>anti-aim>angles>anti-aim")
+local aa_pitch_ref = menu.get_reference("rage>anti-aim>angles>pitch")
+local aa_yaw_ref = menu.get_reference("rage>anti-aim>angles>yaw")
+local aa_at_target_ref = menu.get_reference("rage>anti-aim>angles>at fov target")
+local aa_yaw_add_ref = menu.get_reference("rage>anti-aim>angles>yaw add")
+local aa_add_ref = menu.get_reference("rage>anti-aim>angles>add")
+local aa_spin_ref = menu.get_reference("rage>anti-aim>angles>spin")
+local aa_spin_range_ref = menu.get_reference("rage>anti-aim>angles>spin range")
+local aa_spin_speed_ref = menu.get_reference("rage>anti-aim>angles>spin speed")
+local aa_jit_ref = menu.get_reference("rage>anti-aim>angles>jitter")
+local aa_jit_range_ref = menu.get_reference("rage>anti-aim>angles>jitter range")
+local aa_jit_rnd_ref = menu.get_reference("rage>anti-aim>angles>random")
+local aa_manual_ref = menu.get_reference("rage>anti-aim>angles>antiaim override")
+local aa_dsy_ref = menu.get_reference("rage>anti-aim>desync>fake")
+local aa_dsy_amt_ref = menu.get_reference("rage>anti-aim>desync>fake amount")
+local aa_dsy_comp_ref = menu.get_reference("rage>anti-aim>desync>compensate angle")
+local aa_dsy_fs_ref = menu.get_reference("rage>anti-aim>desync>freestand fake")
+local aa_dsy_jit_ref = menu.get_reference("rage>anti-aim>desync>flip fake with jitter")
+local aa_roll_ref = menu.get_reference("rage>anti-aim>desync>roll lean")
+local aa_roll_walk_ref = menu.get_reference("rage>anti-aim>desync>ensure lean")
+local aa_roll_flip_ref = menu.get_reference("rage>anti-aim>desync>flip lean with jitter")
+local aa_fakelag_ref = menu.get_reference("rage>anti-aim>fakelag>limit")
+local aa_leg_ref = menu.get_reference("rage>anti-aim>desync>leg slide")
+
+aa_manual_ref:set_visible(false)
+left_ref:set_visible(false)
+back_ref:set_visible(false)
+right_ref:set_visible(false)
+fs_ref:set_visible(false)
+aa_at_target_ref:set_visible(false)
+aa_yaw_add_ref:set_visible(false)
+aa_add_ref:set_visible(false)
+aa_spin_ref:set_visible(false)
+aa_spin_range_ref:set_visible(false)
+aa_spin_speed_ref:set_visible(false)
+aa_jit_ref:set_visible(false)
+aa_jit_range_ref:set_visible(false)
+aa_jit_rnd_ref:set_visible(false)
+aa_dsy_ref:set_visible(false)
+aa_dsy_amt_ref:set_visible(false)
+aa_dsy_comp_ref:set_visible(false)
+aa_dsy_fs_ref:set_visible(false)
+aa_dsy_jit_ref:set_visible(false)
+aa_roll_ref:set_visible(false)
+aa_roll_walk_ref:set_visible(false)
+aa_roll_flip_ref:set_visible(false)
+
+menu.add_keybind(ui.left)
+menu.add_keybind(ui.back)
+menu.add_keybind(ui.right)
+menu.add_keybind(ui.fs)
+menu.add_keybind(ui.da_ovr)
+menu.add_keybind(ui.legitaa)
+
+aa_manual_ref:bind_to(ui.aa_manual)
+left_ref:bind_to(ui.left)
+back_ref:bind_to(ui.back)
+right_ref:bind_to(ui.right)
+fs_ref:bind_to(ui.fs)
+
+local on_ground_ticks = 0
+
+local sigs = {
+    get_pose_params = {"client.dll", "55 8B EC 8B 45 08 57 8B F9 8B 4F 04 85 C9 75 15"}
+}
+
+local offsets = {
+    animstate = 0x9960,
+    m_pStudioHdr = 0x2950,
+    landing_anim = 0x109,
+}
+
+function bool_to_int(v)
+    return v and 1 or 0
+end
+
+function lerp(a, b, t)
+    return a + (b - a) * t
+end
+
+function mix(first, second, amt)
+    return {
+        lerp(first.r, second.r, amt),
+        lerp(first.g, second.g, amt),
+        lerp(first.b, second.b, amt),
+        lerp(first.a, second.a, amt),
+    }
+end
+
+function text_multicolor(data, x, y, font, alphamod)
+    local textp = 0
+    local totaltext = ""
+    for k,v in pairs(data) do
+        totaltext = totaltext .. v.text
+    end
+    local ttx = {}
+        ttx.x,ttx.y = render.get_text_size(font, totaltext)
+    for k,v in pairs(data) do
+        if alphamod then
+            v.clr.a = alphamod
+        end
+        render.text(font, x+textp-ttx.x/2,y,v.text,v.clr)
+        textp = textp + render.get_text_size(font,v.text)
+    end
+end
+
+local bind_argument = function(fn, arg)
+    return function(...)
+        return fn(arg, ...)
+    end
+end
+
+local interface_type = ffi.typeof("uintptr_t**")
+
+local i_client_entity_list = ffi.cast(interface_type, utils.find_interface("client.dll", "VClientEntityList003"))
+local get_client_entity = bind_argument(ffi.cast("void*(__thiscall*)(void*, int)", i_client_entity_list[0][3]), i_client_entity_list)
+
+local get_pose_parameters = ffi.cast( "struct {char pad[8]; float m_flStart; float m_flEnd; float m_flState;}*(__thiscall* )( void*, int )", utils.find_pattern(unpack(sigs.get_pose_params)))
+
+local cache = {}
+
+local set_layer = function(player_ptr, layer, start_val, end_val)
+
+    player_ptr = ffi.cast("unsigned int", player_ptr)
+
+    if player_ptr == 0x0 then
+        return false
+    end
+
+    local studio_hdr = ffi.cast("void**", player_ptr + offsets.m_pStudioHdr)[0]
+
+    if studio_hdr == nil then
+        return false
+    end
+
+    local pose_params = get_pose_parameters(studio_hdr, layer)
+
+    if pose_params == nil then
+        return
+    end
+
+    if cache[layer] == nil then
+        cache[layer] = {}
+
+        cache[layer].m_flStart = pose_params.m_flStart
+        cache[layer].m_flEnd = pose_params.m_flEnd
+
+        cache[layer].m_flState = pose_params.m_flState
+
+        cache[layer].installed = false
+        return true
+    end
+
+    if start_val ~= nil and not cache[layer].installed then
+        pose_params.m_flStart   = start_val
+        pose_params.m_flEnd     = end_val
+
+        pose_params.m_flState   = (pose_params.m_flStart + pose_params.m_flEnd) / 2
+
+        cache[layer].installed = true
+        return true
+    end
+    
+    if cache[layer].installed then
+        pose_params.m_flStart   = cache[layer].m_flStart
+        pose_params.m_flEnd     = cache[layer].m_flEnd
+
+        pose_params.m_flState   = cache[layer].m_flState
+
+        cache[layer].installed = false
+
+        return true
+    end
+
+    return false
+end
+
+local jittering = false
+local setup = function(cmd)
+    local lp = entities[engine.get_local_player()]
+    local local_player = get_client_entity(engine.get_local_player())
+
+    if local_player == nil or lp:is_alive() == false or engine.is_in_game() == false then
+        return
+    end
+
+    local animstate = ffi.cast( "void**", ffi.cast("unsigned int", local_player) + offsets.animstate)[0]
+
+    if animstate == nil then
+        return
+    end
+
+    animstate = ffi.cast("unsigned int", animstate)
+
+    if animstate == 0x0 then
+        return
+    end
+
+    for k, _ in pairs(cache) do
+        set_layer(local_player, k)
+    end
+
+    local random = utils.random_float(-180, 180)
+
+    if (ui.leg_movement:get() == 4 and ui.animchangers:get()) then
+        set_layer(local_player, 8, 0, 0.001)
+        set_layer(local_player, 9, 0, 0.001)
+        set_layer(local_player, 10, 0, 0.001)
+        aa_leg_ref:set(1)
+    elseif (ui.leg_movement:get() == 3 and ui.animchangers:get()) then
+        set_layer(local_player, 7, 0, 0.001)
+        aa_leg_ref:set(1)
+    elseif (ui.leg_movement:get() == 2 and ui.animchangers:get()) then
+        set_layer(local_player, 0, random, random)
+        aa_leg_ref:set(2)
+    elseif (ui.leg_movement:get() == 1 and ui.animchangers:get()) then
+        set_layer(local_player, 0, jittering and -180 or 160, jittering and 180 or -160)
+        aa_leg_ref:set(2)
+    else
+        set_layer(local_player, 0, -180, 180)
+    end
+
+    jittering = not jittering
+
+    if (ui.lean:get() == 1 and ui.animchangers:get()) then
+        set_layer(local_player, 2, random, random)
+    else
+        set_layer(local_player, 2, -180, 180)
+    end
+    
+    if (ui.falling_anim:get() == 1 and ui.animchangers:get()) then
+        set_layer(local_player, 6, 0.9, 1)
+    end
+end
+
+local on_destroy = function()
+    local local_player = get_client_entity(engine.get_local_player())
+
+    if local_player == nil then
+        return
+    end
+
+    for k, _ in pairs(cache) do
+        set_layer(local_player, k)
+    end
+
+end
+
+local legit_aa = 0; local defensive = 0; local spin = -180;
+function antiaim()
+    local local_player = entities.get_entity(engine.get_local_player())
+
+    if local_player == nil then
+        return
+    end
+
+    local is_defusing = local_player:get_prop("m_bIsDefusing")
+
+    if (is_defusing) then
+        aa_yaw_add_ref:set(0)
+        aa_spin_ref:set(0)
+        aa_jit_ref:set(0)
+        aa_dsy_ref:set(0)
+        return
+    else
+        aa_check_ref:set(1)
+    end
+
+    if (ui.legitaa:get() and not is_defusing) then
+        if (legit_aa < 2) then
+            legit_aa = legit_aa + 1
+            return
+        end
+
+        engine.exec("-use")
+        aa_pitch_ref:set(0)
+        aa_yaw_ref:set(0)
+        aa_at_target_ref:set(0)
+        aa_yaw_add_ref:set(0)
+        aa_spin_ref:set(0)
+        aa_jit_ref:set(0)
+        aa_dsy_ref:set(1)
+        aa_dsy_amt_ref:set(-100)
+        aa_dsy_jit_ref:set(0)
+        aa_dsy_fs_ref:set(1)
+        return
+    else
+        legit_aa = 0
+        aa_pitch_ref:set(1)
+        aa_yaw_ref:set(1)
+    end
+
+    local duckamt = local_player:get_prop("m_flDuckAmount")
+    local jumping = local_player:get_prop("m_hGroundEntity") == -1
+    local walking = sw_ref:get() == 1
+
+    local vel = math.sqrt(local_player:get_prop("m_vecVelocity[0]") * local_player:get_prop("m_vecVelocity[0]") + local_player:get_prop("m_vecVelocity[1]") * local_player:get_prop("m_vecVelocity[1]"))
+
+    if (defensive > 0 and ui.defensive_aa:get() and dt_ref:get() == 1 and hs_ref:get() == 0) then
+        if spin > 170 then
+            spin = -180
+        end
+
+        aa_pitch_ref:set(3)
+        aa_yaw_add_ref:set(1)
+        aa_add_ref:set(ui.def_type:get() == 1 and spin or 180)
+        aa_spin_ref:set(false)
+        aa_jit_ref:set(ui.def_type:get() == 1 and 0 or 1)
+        aa_jit_range_ref:set(140)
+        aa_dsy_ref:set(true)
+        aa_dsy_amt_ref:set(-100)
+        aa_dsy_jit_ref:set(false)
+        aa_dsy_fs_ref:set(2)
+
+        spin = spin + 20
+        return
+    end
+
+    if ((ui.jit_dis:get()[1] and fs_ref:get() == 1) or (ui.jit_dis:get()[2] and (left_ref:get() == 1 or back_ref:get() == 1 or right_ref:get() == 1))) then
+        aa_at_target_ref:set(1)
+        aa_yaw_add_ref:set(0)
+        aa_spin_ref:set(0)
+        aa_jit_ref:set(0)
+        aa_dsy_ref:set(1)
+        aa_dsy_amt_ref:set(-100)
+        aa_dsy_jit_ref:set(0)
+        aa_dsy_fs_ref:set(2)
+        return
+    end
+
+    local tickcount = math.floor(global_vars.tickcount % 6 / 2)
+    local slowjitter = math.floor(global_vars.tickcount % 8 / 4) * 2
+
+    if (jumping and duckamt > 0.5) then
+        aa_at_target_ref:set(ui.ad_at_target:get())
+        aa_yaw_add_ref:set(ui.ad_yaw_add:get() > 0 and true or false)
+        if (ui.ad_yaw_add:get() > 2) then
+            aa_add_ref:set(-ui.ad_add:get() + (ui.ad_add:get() * slowjitter))
+        else
+            aa_add_ref:set(ui.ad_yaw_add:get() == 2 and (-ui.ad_add:get() + (ui.ad_add:get() * tickcount)) or (ui.ad_add:get()))
+        end
+        aa_spin_ref:set(ui.ad_spin:get())
+        aa_spin_range_ref:set(ui.ad_spin_range:get())
+        aa_spin_speed_ref:set(ui.ad_spin_speed:get())
+        aa_jit_ref:set(ui.ad_jit:get())
+        aa_jit_range_ref:set(ui.ad_jit_range:get())
+        aa_jit_rnd_ref:set(ui.ad_jit_rnd:get())
+        aa_dsy_ref:set(ui.ad_dsy:get() > 0 and true or false)
+        if (ui.ad_dsy:get() > 2) then
+            aa_dsy_amt_ref:set((slowjitter > 0 and ui.ad_dsy:get() > 1) and -ui.ad_dsy_amt:get() or ui.ad_dsy_amt:get())
+        else
+            aa_dsy_amt_ref:set((tickcount > 1 and ui.ad_dsy:get() > 1) and -ui.ad_dsy_amt:get() or ui.ad_dsy_amt:get())
+        end
+        aa_dsy_fs_ref:set(ui.ad_dsy_fs:get())
+        aa_dsy_jit_ref:set(ui.ad_dsy_jit:get())
+    elseif (jumping) then
+        aa_at_target_ref:set(ui.ai_at_target:get())
+        aa_yaw_add_ref:set(ui.ai_yaw_add:get() > 0 and true or false)
+        if (ui.ai_yaw_add:get() > 2) then
+            aa_add_ref:set(-ui.ai_add:get() + (ui.ai_add:get() * slowjitter))
+        else
+            aa_add_ref:set(ui.ai_yaw_add:get() == 2 and (-ui.ai_add:get() + (ui.ai_add:get() * tickcount)) or (ui.ai_add:get()))
+        end
+        aa_spin_ref:set(ui.ai_spin:get())
+        aa_spin_range_ref:set(ui.ai_spin_range:get())
+        aa_spin_speed_ref:set(ui.ai_spin_speed:get())
+        aa_jit_ref:set(ui.ai_jit:get())
+        aa_jit_range_ref:set(ui.ai_jit_range:get())
+        aa_jit_rnd_ref:set(ui.ai_jit_rnd:get())
+        aa_dsy_ref:set(ui.ai_dsy:get() > 0 and true or false)
+        if (ui.ai_dsy:get() > 2) then
+            aa_dsy_amt_ref:set((slowjitter > 0 and ui.ai_dsy:get() > 1) and -ui.ai_dsy_amt:get() or ui.ai_dsy_amt:get())
+        else
+            aa_dsy_amt_ref:set((tickcount > 1 and ui.ai_dsy:get() > 1) and -ui.ai_dsy_amt:get() or ui.ai_dsy_amt:get())
+        end
+        aa_dsy_fs_ref:set(ui.ai_dsy_fs:get())
+        aa_dsy_jit_ref:set(ui.ai_dsy_jit:get())
+    elseif (walking and vel > 5) then
+        aa_at_target_ref:set(ui.sw_at_target:get())
+        aa_yaw_add_ref:set(ui.sw_yaw_add:get() > 0 and true or false)
+        if (ui.sw_yaw_add:get() > 2) then
+            aa_add_ref:set(-ui.sw_add:get() + (ui.sw_add:get() * slowjitter))
+        else
+            aa_add_ref:set(ui.sw_yaw_add:get() == 2 and (-ui.sw_add:get() + (ui.sw_add:get() * tickcount)) or (ui.sw_add:get()))
+        end
+        aa_spin_ref:set(ui.sw_spin:get())
+        aa_spin_range_ref:set(ui.sw_spin_range:get())
+        aa_spin_speed_ref:set(ui.sw_spin_speed:get())
+        aa_jit_ref:set(ui.sw_jit:get())
+        aa_jit_range_ref:set(ui.sw_jit_range:get())
+        aa_jit_rnd_ref:set(ui.sw_jit_rnd:get())
+        aa_dsy_ref:set(ui.sw_dsy:get() > 0 and true or false)
+        if (ui.sw_dsy:get() > 2) then
+            aa_dsy_amt_ref:set((slowjitter > 0 and ui.sw_dsy:get() > 1) and -ui.sw_dsy_amt:get() or ui.sw_dsy_amt:get())
+        else
+            aa_dsy_amt_ref:set((tickcount > 1 and ui.sw_dsy:get() > 1) and -ui.sw_dsy_amt:get() or ui.sw_dsy_amt:get())
+        end
+        aa_dsy_fs_ref:set(ui.sw_dsy_fs:get())
+        aa_dsy_jit_ref:set(ui.sw_dsy_jit:get())
+    elseif (duckamt > 0.5) then
+        aa_at_target_ref:set(ui.dc_at_target:get())
+        aa_yaw_add_ref:set(ui.dc_yaw_add:get() > 0 and true or false)
+        if (ui.dc_yaw_add:get() > 2) then
+            aa_add_ref:set(-ui.dc_add:get() + (ui.dc_add:get() * slowjitter))
+        else
+            aa_add_ref:set(ui.dc_yaw_add:get() == 2 and (-ui.dc_add:get() + (ui.dc_add:get() * tickcount)) or (ui.dc_add:get()))
+        end
+        aa_spin_ref:set(ui.dc_spin:get())
+        aa_spin_range_ref:set(ui.dc_spin_range:get())
+        aa_spin_speed_ref:set(ui.dc_spin_speed:get())
+        aa_jit_ref:set(ui.dc_jit:get())
+        aa_jit_range_ref:set(ui.dc_jit_range:get())
+        aa_jit_rnd_ref:set(ui.dc_jit_rnd:get())
+        aa_dsy_ref:set(ui.dc_dsy:get() > 0 and true or false)
+        if (ui.dc_dsy:get() > 2) then
+            aa_dsy_amt_ref:set((slowjitter > 0 and ui.dc_dsy:get() > 1) and -ui.dc_dsy_amt:get() or ui.dc_dsy_amt:get())
+        else
+            aa_dsy_amt_ref:set((tickcount > 1 and ui.dc_dsy:get() > 1) and -ui.dc_dsy_amt:get() or ui.dc_dsy_amt:get())
+        end
+        aa_dsy_fs_ref:set(ui.dc_dsy_fs:get())
+        aa_dsy_jit_ref:set(ui.dc_dsy_jit:get())
+    elseif (vel < 5) then
+        aa_at_target_ref:set(ui.st_at_target:get())
+        aa_yaw_add_ref:set(ui.st_yaw_add:get() > 0 and true or false)
+        if (ui.st_yaw_add:get() > 2) then
+            aa_add_ref:set(-ui.st_add:get() + (ui.st_add:get() * slowjitter))
+        else
+            aa_add_ref:set(ui.st_yaw_add:get() == 2 and (-ui.st_add:get() + (ui.st_add:get() * tickcount)) or (ui.st_add:get()))
+        end
+        aa_spin_ref:set(ui.st_spin:get())
+        aa_spin_range_ref:set(ui.st_spin_range:get())
+        aa_spin_speed_ref:set(ui.st_spin_speed:get())
+        aa_jit_ref:set(ui.st_jit:get())
+        aa_jit_range_ref:set(ui.st_jit_range:get())
+        aa_jit_rnd_ref:set(ui.st_jit_rnd:get())
+        aa_dsy_ref:set(ui.st_dsy:get() > 0 and true or false)
+        if (ui.st_dsy:get() > 2) then
+            aa_dsy_amt_ref:set((slowjitter > 0 and ui.st_dsy:get() > 1) and -ui.st_dsy_amt:get() or ui.st_dsy_amt:get())
+        else
+            aa_dsy_amt_ref:set((tickcount > 1 and ui.st_dsy:get() > 1) and -ui.st_dsy_amt:get() or ui.st_dsy_amt:get())
+        end
+        aa_dsy_fs_ref:set(ui.st_dsy_fs:get())
+        aa_dsy_jit_ref:set(ui.st_dsy_jit:get())
+    else
+        aa_at_target_ref:set(ui.mv_at_target:get())
+        aa_yaw_add_ref:set(ui.mv_yaw_add:get() > 0 and true or false)
+        if (ui.mv_yaw_add:get() > 2) then
+            aa_add_ref:set(-ui.mv_add:get() + (ui.mv_add:get() * slowjitter))
+        else
+            aa_add_ref:set(ui.mv_yaw_add:get() == 2 and (-ui.mv_add:get() + (ui.mv_add:get() * tickcount)) or (ui.mv_add:get()))
+        end
+        aa_spin_ref:set(ui.mv_spin:get())
+        aa_spin_range_ref:set(ui.mv_spin_range:get())
+        aa_spin_speed_ref:set(ui.mv_spin_speed:get())
+        aa_jit_ref:set(ui.mv_jit:get())
+        aa_jit_range_ref:set(ui.mv_jit_range:get())
+        aa_jit_rnd_ref:set(ui.mv_jit_rnd:get())
+        aa_dsy_ref:set(ui.mv_dsy:get() > 0 and true or false)
+        if (ui.mv_dsy:get() > 2) then
+            aa_dsy_amt_ref:set((slowjitter > 0 and ui.mv_dsy:get() > 1) and -ui.mv_dsy_amt:get() or ui.mv_dsy_amt:get())
+        else
+            aa_dsy_amt_ref:set((tickcount > 1 and ui.mv_dsy:get() > 1) and -ui.mv_dsy_amt:get() or ui.mv_dsy_amt:get())
+        end
+        aa_dsy_fs_ref:set(ui.mv_dsy_fs:get())
+        aa_dsy_jit_ref:set(ui.mv_dsy_jit:get())
+    end
+end
+
+local highest_tickbase = 0
+function on_create_move()
+    setup()
+
+    local local_player = entities.get_entity(engine.get_local_player())
+    if local_player == nil then
+        return
+    end
+
+    local local_player = entities.get_entity(engine.get_local_player())
+
+    if local_player == nil then
+        return
+    end
+
+    if ui.defensive_aa:get() then
+        local tickbase = local_player:get_prop("m_nTickBase")
+
+        if (tickbase > highest_tickbase) then
+            highest_tickbase = tickbase
+            if defensive > 0 and defensive < ui.def_delay:get() + 1 then
+                defensive = defensive + 1
+            elseif defensive > ui.def_delay:get() then
+                defensive = 0
+            end
+        else
+            defensive = 1
+        end
+    end
+
+    local on_ground = bit.band(local_player:get_prop("m_fFlags"),1)
+    if on_ground == 1 then
+        on_ground_ticks = on_ground_ticks + 1
+    else
+        on_ground_ticks = 0
+    end
+
+    if (ui.fl_ovr:get()[1] and dt_ref:get() == 1) or (ui.fl_ovr:get()[2] and hs_ref:get() == 1) then
+        aa_fakelag_ref:set(1)
+    else
+        aa_fakelag_ref:set(14)
+    end
+
+    antiaim()
+end
+
+function get_button(cmd, button)
+    return bit.band(cmd:get_buttons(), button) ~= 0
+end
+
+local pitch_jit = false
+function on_run_command(cmd)
+    if not ui.defensive_aa:get() then
+        return
+    end
+
+    local view_angles_x, view_angles_y = cmd:get_view_angles()
+
+    local in_attack = get_button(cmd, csgo.in_attack)
+    local pitch = ui.def_pitch:get()
+
+    if pitch == 0 then
+        pitch = 89
+    elseif pitch == 1 then
+        pitch = 45
+    elseif pitch == 2 then
+        pitch = 0
+    elseif pitch == 3 then
+        pitch = -45
+    elseif pitch == 4 then
+        pitch = -89
+    elseif pitch == 5 then
+        if pitch_jit then
+            pitch = -45
+        else
+            pitch = 45
+        end
+    elseif pitch == 6 then
+        if pitch_jit then
+            pitch = -89
+        else
+            pitch = 89
+        end
+    else
+        pitch = ui.def_custom_pitch:get()
+    end
+
+    pitch_jit = not pitch_jit
+
+    if defensive > 0 and not in_attack and dt_ref:get() == 1 and hs_ref:get() == 0 then
+        cmd:set_view_angles(pitch, view_angles_y + 180, 0)
+    end
+end
+
+function menu_handler()
+    local tab = ui.tabs:get()
+
+    local tabrage = tab == 0
+    local tabvis = tab == 1
+    local tabmisc = tab == 2
+
+    local cond_st = ui.aa_cond:get() == 0
+    local cond_mv = ui.aa_cond:get() == 1
+    local cond_ai = ui.aa_cond:get() == 2
+    local cond_ad = ui.aa_cond:get() == 3
+    local cond_dc = ui.aa_cond:get() == 4
+    local cond_sw = ui.aa_cond:get() == 5
+    
+    local animbreaker = ui.animchangers:get()
+    local leg_movement = ui.leg_movement:get() == 1
+
+    ui.st_at_target:set_visible(cond_st)
+    ui.mv_at_target:set_visible(cond_mv)
+    ui.ai_at_target:set_visible(cond_ai)
+    ui.ad_at_target:set_visible(cond_ad)
+    ui.dc_at_target:set_visible(cond_dc)
+    ui.sw_at_target:set_visible(cond_sw)
+    
+    ui.st_yaw_add:set_visible(cond_st)
+    ui.mv_yaw_add:set_visible(cond_mv)
+    ui.ai_yaw_add:set_visible(cond_ai)
+    ui.ad_yaw_add:set_visible(cond_ad)
+    ui.dc_yaw_add:set_visible(cond_dc)
+    ui.sw_yaw_add:set_visible(cond_sw)
+
+    ui.st_add:set_visible(cond_st and ui.st_yaw_add:get() > 0)
+    ui.mv_add:set_visible(cond_mv and ui.mv_yaw_add:get() > 0)
+    ui.ai_add:set_visible(cond_ai and ui.ai_yaw_add:get() > 0)
+    ui.ad_add:set_visible(cond_ad and ui.ad_yaw_add:get() > 0)
+    ui.dc_add:set_visible(cond_dc and ui.dc_yaw_add:get() > 0)
+    ui.sw_add:set_visible(cond_sw and ui.sw_yaw_add:get() > 0)
+
+    ui.st_spin:set_visible(cond_st)
+    ui.mv_spin:set_visible(cond_mv)
+    ui.ai_spin:set_visible(cond_ai)
+    ui.ad_spin:set_visible(cond_ad)
+    ui.dc_spin:set_visible(cond_dc)
+    ui.sw_spin:set_visible(cond_sw)
+
+    ui.st_spin_range:set_visible(cond_st and ui.st_spin:get())
+    ui.mv_spin_range:set_visible(cond_mv and ui.mv_spin:get())
+    ui.ai_spin_range:set_visible(cond_ai and ui.ai_spin:get())
+    ui.ad_spin_range:set_visible(cond_ad and ui.ad_spin:get())
+    ui.dc_spin_range:set_visible(cond_dc and ui.dc_spin:get())
+    ui.sw_spin_range:set_visible(cond_sw and ui.sw_spin:get())
+
+    ui.st_spin_speed:set_visible(cond_st and ui.st_spin:get())
+    ui.mv_spin_speed:set_visible(cond_mv and ui.mv_spin:get())
+    ui.ai_spin_speed:set_visible(cond_ai and ui.ai_spin:get())
+    ui.ad_spin_speed:set_visible(cond_ad and ui.ad_spin:get())
+    ui.dc_spin_speed:set_visible(cond_dc and ui.dc_spin:get())
+    ui.sw_spin_speed:set_visible(cond_sw and ui.sw_spin:get())
+
+    ui.st_jit:set_visible(cond_st)
+    ui.mv_jit:set_visible(cond_mv)
+    ui.ai_jit:set_visible(cond_ai)
+    ui.ad_jit:set_visible(cond_ad)
+    ui.dc_jit:set_visible(cond_dc)
+    ui.sw_jit:set_visible(cond_sw)
+
+    ui.st_jit_range:set_visible(cond_st and ui.st_jit:get())
+    ui.mv_jit_range:set_visible(cond_mv and ui.mv_jit:get())
+    ui.ai_jit_range:set_visible(cond_ai and ui.ai_jit:get())
+    ui.ad_jit_range:set_visible(cond_ad and ui.ad_jit:get())
+    ui.dc_jit_range:set_visible(cond_dc and ui.dc_jit:get())
+    ui.sw_jit_range:set_visible(cond_sw and ui.sw_jit:get())
+
+    ui.st_jit_rnd:set_visible(cond_st and ui.st_jit:get())
+    ui.mv_jit_rnd:set_visible(cond_mv and ui.mv_jit:get())
+    ui.ai_jit_rnd:set_visible(cond_ai and ui.ai_jit:get())
+    ui.ad_jit_rnd:set_visible(cond_ad and ui.ad_jit:get())
+    ui.dc_jit_rnd:set_visible(cond_dc and ui.dc_jit:get())
+    ui.sw_jit_rnd:set_visible(cond_sw and ui.sw_jit:get())
+
+    ui.st_dsy:set_visible(cond_st)
+    ui.mv_dsy:set_visible(cond_mv)
+    ui.ai_dsy:set_visible(cond_ai)
+    ui.ad_dsy:set_visible(cond_ad)
+    ui.dc_dsy:set_visible(cond_dc)
+    ui.sw_dsy:set_visible(cond_sw)
+    
+    ui.st_dsy_amt:set_visible(cond_st and ui.st_dsy:get() > 0)
+    ui.mv_dsy_amt:set_visible(cond_mv and ui.mv_dsy:get() > 0)
+    ui.ai_dsy_amt:set_visible(cond_ai and ui.ai_dsy:get() > 0)
+    ui.ad_dsy_amt:set_visible(cond_ad and ui.ad_dsy:get() > 0)
+    ui.dc_dsy_amt:set_visible(cond_dc and ui.dc_dsy:get() > 0)
+    ui.sw_dsy_amt:set_visible(cond_sw and ui.sw_dsy:get() > 0)
+    
+    ui.st_dsy_fs:set_visible(cond_st and ui.st_dsy:get() > 0)
+    ui.mv_dsy_fs:set_visible(cond_mv and ui.mv_dsy:get() > 0)
+    ui.ai_dsy_fs:set_visible(cond_ai and ui.ai_dsy:get() > 0)
+    ui.ad_dsy_fs:set_visible(cond_ad and ui.ad_dsy:get() > 0)
+    ui.dc_dsy_fs:set_visible(cond_dc and ui.dc_dsy:get() > 0)
+    ui.sw_dsy_fs:set_visible(cond_sw and ui.sw_dsy:get() > 0)
+
+    ui.st_dsy_jit:set_visible(cond_st and ui.st_dsy:get() > 0)
+    ui.mv_dsy_jit:set_visible(cond_mv and ui.mv_dsy:get() > 0)
+    ui.ai_dsy_jit:set_visible(cond_ai and ui.ai_dsy:get() > 0)
+    ui.ad_dsy_jit:set_visible(cond_ad and ui.ad_dsy:get() > 0)
+    ui.dc_dsy_jit:set_visible(cond_dc and ui.dc_dsy:get() > 0)
+    ui.sw_dsy_jit:set_visible(cond_sw and ui.sw_dsy:get() > 0)
+    
+    ui.def_pitch:set_visible(ui.defensive_aa:get())
+    ui.def_custom_pitch:set_visible(ui.defensive_aa:get() and ui.def_pitch:get() == 7)
+    ui.def_type:set_visible(ui.defensive_aa:get())
+    ui.def_delay:set_visible(ui.defensive_aa:get())
+
+    ui.da_ovr:set_visible(tabrage)
+    ui.fl_ovr:set_visible(tabrage)
+    ui.inds:set_visible(tabvis)
+    ui.log_offset:set_visible(tabvis and ui.inds:get()[2])
+    ui.removals:set_visible(tabvis)
+    ui.sunset:set_visible(tabvis)
+    ui.sunset_x:set_visible(tabvis and ui.sunset:get())
+    ui.sunset_y:set_visible(tabvis and ui.sunset:get())
+    ui.sunset_z:set_visible(tabvis and ui.sunset:get())
+    ui.fog:set_visible(tabvis)
+    ui.fog_start:set_visible(tabvis and ui.fog:get())
+    ui.fog_end:set_visible(tabvis and ui.fog:get())
+    ui.fog_strength:set_visible(tabvis and ui.fog:get())
+    ui.ratio:set_visible(tabvis)
+    ui.animchangers:set_visible(tabmisc)
+    ui.leg_movement:set_visible(tabmisc and animbreaker)
+    ui.lean:set_visible(tabmisc and animbreaker)
+    ui.falling_anim:set_visible(tabmisc and animbreaker)
+end
+
+local anim = 0; local dt_lerp = 0; local dt_a = 0; local os_a = 0; local fs_a = 0; local md_a = 0; local ba_a = 0; local da_a = 0
+local arrow_lr = 0; local arrow_lg = 0; local arrow_lb = 0; local arrow_la = 0; local arrow_rr = 0; local arrow_rg = 0; local arrow_rb = 0; local arrow_ra = 0
+local side_l = 0; local side_r = 0
+function on_paint()
+    menu_handler()
+
+    if (engine.is_in_game() == false) then
+        return
+    end
+
+    local w_mul = 510 / string.len(script_name)
+    local watermark_w, watermark_h = render.get_text_size(verdana, script_name)
+    local wc_offset = 0
+
+    for i = 1, string.len(script_name) do
+        local char = string.sub(script_name, i, i)
+        local char_w, char_h = render.get_text_size(verdana, char)
+        local c_anim = math.min((global_vars.tickcount * 5 - i * w_mul) % 1020, 510)
+        local alpha = c_anim > 255 and 510 - c_anim or c_anim
+        local col = mix(render.color(255, 255, 255, 120), render.color(255, 255, 255, 255), alpha / 255)
+
+        render.text(verdana, w / 2 - watermark_w / 2 + wc_offset, h - 10, char, render.color(unpack(col)), render.align_left, render.align_center)
+
+        wc_offset = wc_offset + char_w
+    end
+    
+    local lp = entities[engine.get_local_player()]
+
+    if lp:is_alive() == false then
+        return
+    end
+
+    if ui.inds:get()[1] then
+        local scoped = lp:get_prop("m_bIsScoped", 0)
+
+        anim = lerp(anim, (scoped and 1 or 0), 0.07)
+
+        dt_lerp = lerp(dt_lerp, (info.fatality.can_fastfire and 255 or 60), 0.07)
+        dt_a = lerp(dt_a, (dt_ref:get() == 1 and 255 or 0), 0.2)
+        os_a = lerp(os_a, (hs_ref:get() == 1 and 255 or 0), 0.2)
+        fs_a = lerp(fs_a, (fs_ref:get() == 1 and 255 or 0), 0.2)
+        md_a = lerp(md_a, (md_ref:get() == 1 and 255 or 0), 0.2)
+        ba_a = lerp(ba_a, (ba_ref:get() == 1 and 255 or 0), 0.2)
+        da_a = lerp(da_a, (ui.da_ovr:get() and 255 or 0), 0.2)
+
+        local dt_col = render.color(255, dt_lerp, dt_lerp, dt_a)
+        local add_y = 0
+
+        local name = "pizdanogam°"
+        local dt_ind = "doubletap"
+        local os_ind = "onshot"
+        local fs_ind = "freestand"
+        local md_ind = "damage"
+        local ba_ind = "safe"
+        local da_ind = "dormant"
+
+        local dt_w, dt_h = render.get_text_size(verdana, dt_ind)
+        local os_w, os_h = render.get_text_size(verdana, os_ind)
+        local fs_w, fs_h = render.get_text_size(verdana, fs_ind)
+        local md_w, md_h = render.get_text_size(verdana, md_ind)
+        local ba_w, ba_h = render.get_text_size(verdana, ba_ind)
+        local da_w, da_h = render.get_text_size(verdana, da_ind)
+
+        local name_w, name_h = render.get_text_size(verdanab, name)
+
+        local add_x = anim * (name_w / 2 + 2)
+
+        local mul = 510 / string.len(name)
+        local c_offset = 0
+
+        local cl1_val = ui.ind_first:get()
+        local cl2_val = ui.ind_second:get()
+
+        for i = 1, string.len(name) do
+            local char = string.sub(name, i, i)
+            local char_w, char_h = render.get_text_size(verdanab, char)
+            local c_anim = math.min((global_vars.tickcount * 5 - i * mul) % 1020, 510)
+            local alpha = c_anim > 255 and 510 - c_anim or c_anim
+            local col = mix(cl1_val, cl2_val, alpha / 255)
+
+            render.text(verdanab, w / 2 - name_w / 2 + add_x + c_offset, h / 2 + 20, char, render.color(unpack(col)), render.align_left, render.align_center)
+
+            c_offset = c_offset + char_w
+        end
+
+        add_y = add_y + 12
+
+        if (ba_ref:get() == 1 or ba_a > 1) then
+            render.text(verdana, w / 2 - (ba_w / 2 - anim * (ba_w / 2 + 2)), h / 2 + 20 + add_y, ba_ind, render.color(255, 255, 255, ba_a), render.align_left, render.align_center)
+            add_y = add_y + 10
+        end
+            
+        if (dt_ref:get() == 1 or dt_a > 1) then
+            render.text(verdana, w / 2 - (dt_w / 2 - anim * (dt_w / 2 + 2)), h / 2 + 20 + add_y, dt_ind, dt_col, render.align_left, render.align_center)
+            add_y = add_y + 10
+        end
+        
+        if (hs_ref:get() == 1 or os_a > 1) then
+            render.text(verdana, w / 2 - (os_w / 2 - anim * (os_w / 2 + 2)), h / 2 + 20 + add_y, os_ind, render.color(255, 255, 255, os_a), render.align_left, render.align_center)
+            add_y = add_y + 10
+        end
+        
+        if (fs_ref:get() == 1 or fs_a > 1) then
+            render.text(verdana, w / 2 - (fs_w / 2 - anim * (fs_w / 2 + 2)), h / 2 + 20 + add_y, fs_ind, render.color(255, 255, 255, fs_a), render.align_left, render.align_center)
+            add_y = add_y + 10
+        end
+        
+        if (md_ref:get() == 1 or md_a > 1) then
+            render.text(verdana, w / 2 - (md_w / 2 - anim * (md_w / 2 + 2)), h / 2 + 20 + add_y, md_ind, render.color(255, 255, 255, md_a), render.align_left, render.align_center)
+            add_y = add_y + 10
+        end
+
+        if (ui.da_ovr:get() or da_a > 1) then
+            render.text(verdana, w / 2 - (da_w / 2 - anim * (da_w / 2 + 2)), h / 2 + 20 + add_y, da_ind, render.color(255, 255, 255, da_a), render.align_left, render.align_center)
+            add_y = add_y + 10
+        end
+    end
+
+    if ui.inds:get()[3] then
+        arrow_lr = lerp(arrow_lr, (left_ref:get() == 1 and ui.ind_first:get().r or 0), 0.1)
+        arrow_lg = lerp(arrow_lg, (left_ref:get() == 1 and ui.ind_first:get().g or 0), 0.1)
+        arrow_lb = lerp(arrow_lb, (left_ref:get() == 1 and ui.ind_first:get().b or 0), 0.1)
+        arrow_la = lerp(arrow_la, (left_ref:get() == 1 and ui.ind_first:get().a or 100), 0.1)
+        arrow_rr = lerp(arrow_rr, (right_ref:get() == 1 and ui.ind_first:get().r or 0), 0.1)
+        arrow_rg = lerp(arrow_rg, (right_ref:get() == 1 and ui.ind_first:get().g or 0), 0.1)
+        arrow_rb = lerp(arrow_rb, (right_ref:get() == 1 and ui.ind_first:get().b or 0), 0.1)
+        arrow_ra = lerp(arrow_ra, (right_ref:get() == 1 and ui.ind_first:get().a or 100), 0.1)
+
+        render.triangle_filled(w / 2 - 64, h / 2 - anim * 16, w / 2 - 50, h / 2 - 7 - anim * 16, w / 2 - 50, h / 2 + 7 - anim * 16, render.color(arrow_lr, arrow_lg, arrow_lb, arrow_la))
+        render.triangle_filled(w / 2 + 64, h / 2 - anim * 16, w / 2 + 50, h / 2 - 7 - anim * 16, w / 2 + 50, h / 2 + 7 - anim * 16, render.color(arrow_rr, arrow_rg, arrow_rb, arrow_ra))
+    end
+
+    local ratio = ui.ratio:get() * 0.01
+    local val_sky = bool_to_int(ui.removals:get()[1] == false)
+    local val_fullbright = bool_to_int(ui.removals:get()[2])
+
+    da_ref:set(ui.da_ovr:get())
+    r_3dsky:set_int(val_sky)
+    r_aspectratio:set_float(ratio)
+    mat_fullbright:set_int(val_fullbright)
+
+    if ui.inds:get()[2] then
+        for k, v in pairs(logs_data) do
+            v.info.alpha:direct(255)
+            if 2.9 - (global_vars.tickcount / 64 - v.info.tick / 64) < 0 then
+                v.info.alpha:direct(0)
+            end
+
+            local totaltext = ""
+            for i, j in pairs(v.data) do
+                totaltext = totaltext .. j.text
+            end
+
+            local text_size_w, text_size_h = render.get_text_size(verdana, totaltext)
+
+            render.rect_filled_rounded(w / 2 - text_size_w / 2 - 6, h / 2 + 156 + ui.log_offset:get() + (24 * (k - 1)) + (v.info.alpha:get_value() / 255 * 24), math.floor(w / 2 + text_size_w / 2 + 8), h / 2 + 176 + ui.log_offset:get() + (24 * (k - 1)) + (v.info.alpha:get_value() / 255 * 24), render.color(10, 10, 10, v.info.alpha:get_value()), 2)
+            render.rect(w / 2 - text_size_w / 2 - 5, h / 2 + 157 + ui.log_offset:get() + (24 * (k - 1)) + (v.info.alpha:get_value() / 255 * 24), math.floor(w / 2 + text_size_w / 2 + 7), h / 2 + 175 + ui.log_offset:get() + (24 * (k - 1)) + (v.info.alpha:get_value() / 255 * 24), render.color(40, 40, 40, v.info.alpha:get_value()))
+
+            text_multicolor(v.data, w / 2, h / 2 + 160 + ui.log_offset:get() + (24 * (k - 1)) + (v.info.alpha:get_value() / 255 * 24), verdana, v.info.alpha:get_value())
+            if v.info.alpha:get_value() <= 0.1 and (2.9 - (global_vars.tickcount / 64 - v.info.tick / 64) < 0) then
+                table.remove(logs_data, k)
+            end
+        end
+    end
+
+    render.rect_filled_rounded(10, 10, 20, 20, render.color(255, 255, 255, 255), 1.5)
+
+    cl_csm_rot_ovr:set_int(ui.sunset:get() and 1 or 0)
+    cl_csm_rot_x:set_int(ui.sunset_x:get())
+    cl_csm_rot_y:set_int(ui.sunset_y:get())
+    cl_csm_rot_z:set_int(ui.sunset_z:get())
+
+    fog_ovr:set_int(ui.fog:get() and 1 or 0)
+    fog_start:set_int(ui.fog_start:get())
+    fog_end:set_int(ui.fog_end:get())
+    fog_color:set_string(tostring(ui.fog_col:get().r) .. " " .. tostring(ui.fog_col:get().g) .. " " .. tostring(ui.fog_col:get().b))
+    fog_maxdensity:set_float(ui.fog_strength:get() / 100)
+end
+
+function on_shot_registered(e)
+    if e.result ~= "hit" and hitgroup_str[e.client_hitgroup] ~= nil then
+        local accent = render.color("#FFFFFF")
+        local rescol = ui.ind_first:get()
+
+        table.insert(logs_data,
+        {
+            data = {
+                {
+                    text = "missed",
+                    clr = accent
+                },
+                {
+                    text = (" %s"):format(engine.get_player_info(e.target).name),
+                    clr = rescol
+                },
+                {
+                    text = ("'s"),
+                    clr = accent
+                },
+                {
+                    text = (" %s"):format(hitgroup_str[e.client_hitgroup]),
+                    clr = rescol
+                },
+                {
+                    text = (" due to"),
+                    clr = accent
+                },
+                {
+                    text = (" %s"):format(e.result),
+                    clr = rescol
+                },
+                {
+                    text = (" ("),
+                    clr = accent
+                },
+                {
+                    text = ("%s"):format(math.floor(.5 + e.hitchance)),
+                    clr = rescol
+                },
+                {
+                    text = ([[% hitchance)]]),
+                    clr = accent
+                },
+            },
+            info = {
+                tick = e.tick,
+                alpha = render.create_animator_float(0, .1)
+                }
+            }
+        )
+    end
+end
+
+function on_player_hurt(e)
+    if not ui.inds:get()[2] then
+        return
+    end
+
+    local attacker = e:get_int("attacker")
+    local attacked = e:get_int("userid")
+    local attacked_index = engine.get_player_for_user_id(attacked)
+    local attacked_name = engine.get_player_info(attacked_index)['name']
+    if engine.get_player_for_user_id(attacker) == engine.get_local_player() and attacked ~= attacker then
+        local accent = render.color("#FFFFFF")
+        local rescol = ui.ind_first:get()
+        table.insert(logs_data,
+        {
+            data = {
+                {
+                    text = "hit",
+                    clr = accent
+                },
+                {
+                    text = (" %s"):format(attacked_name),
+                    clr = rescol
+                },
+                {
+                    text = ("'s"),
+                    clr = accent
+                },
+                {
+                    text = (" %s"):format(hitgroup_str[e:get_int("hitgroup")]),
+                    clr = rescol
+                },
+                {
+                    text = (" for"),
+                    clr = accent
+                },
+                {
+                    text = (" %s"):format(e:get_int("dmg_health")),
+                    clr = rescol
+                },
+                {
+                    text = (" damage ("),
+                    clr = accent
+                },
+                {
+                    text = e:get_int("health") == 0 and "" or ("%s"):format(e:get_int("health")),
+                    clr = rescol
+                },
+                {
+                    text = (e:get_int("health") == 0 and [[dead)]] or [[ health remaining)]]),
+                    clr = accent
+                },
+            },
+            info = {
+                tick = global_vars.tickcount,
+                alpha = render.create_animator_float(0, .1)
+                }
+            }
+        )
+    end
+end
+
+function on_round_start()
+    defensive = 0
+end
+
+function on_shutdown()
+    aa_manual_ref:set_visible(true)
+    left_ref:set_visible(true)
+    back_ref:set_visible(true)
+    right_ref:set_visible(true)
+    fs_ref:set_visible(true)
+    aa_at_target_ref:set_visible(true)
+    aa_yaw_add_ref:set_visible(true)
+    aa_add_ref:set_visible(true)
+    aa_spin_ref:set_visible(true)
+    aa_spin_range_ref:set_visible(true)
+    aa_spin_speed_ref:set_visible(true)
+    aa_jit_ref:set_visible(true)
+    aa_jit_range_ref:set_visible(true)
+    aa_jit_rnd_ref:set_visible(true)
+    aa_dsy_ref:set_visible(true)
+    aa_dsy_amt_ref:set_visible(true)
+    aa_dsy_comp_ref:set_visible(true)
+    aa_dsy_fs_ref:set_visible(true)
+    aa_dsy_jit_ref:set_visible(true)
+    aa_roll_ref:set_visible(true)
+    aa_roll_walk_ref:set_visible(true)
+    aa_roll_flip_ref:set_visible(true)
+
+    on_destroy()
+end
